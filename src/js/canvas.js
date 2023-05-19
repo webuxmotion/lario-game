@@ -1,8 +1,11 @@
+import images from './images';
+
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 const gravity = 1.4;
+const xBackgroundVelocityOnPressed = 5;
 // ends before platform creation starts
 // https://youtu.be/4q2vvZn5aoo?t=2164
 
@@ -49,29 +52,51 @@ class Player {
   }
 }
 
-class Platform {
-  constructor({ x, y }) {
+class GenericObject {
+  constructor({ x, y, image }) {
     this.position = {
       x,
       y
     };
-
-    this.width = 200;
-    this.height = 20;
+    this.image = image;
+    this.width = this.image.width;
+    this.height = this.image.height;
   }
 
   draw() {
-    c.fillStyle = "blue";
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    c.drawImage(this.image, this.position.x, this.position.y);
   }
 }
 
 const player = new Player();
 const platforms = [
-    new Platform({ x: 200, y: canvas.height - 200 }),
-    new Platform({ x: 300, y: canvas.height - 100 }),
-    new Platform({ x: 400, y: canvas.height - 150 })
+    new GenericObject({ x: 0, y: canvas.height - images.platform.height, image: images.platform }),
+    new GenericObject({ x: images.platform.width - 3, y: canvas.height - images.platform.height, image: images.platform }),
+    new GenericObject({ x: images.platform.width * 2 - 3*2, y: canvas.height - images.platform.height, image: images.platform }),
+    new GenericObject({ x: 400, y: canvas.height - 300, image: images.platform }),
+    new GenericObject({ x: 600, y: canvas.height - 600, image: images.platform }),
+  ];
+const background = new GenericObject({
+  x: -1,
+  y: -1,
+  image: images.background,
+});
+const background2 = new GenericObject({
+  x: -1,
+  y: images.background.height - 3,
+  image: images.background,
+});
+const hills = new GenericObject({
+  x: -1,
+  y: canvas.height - images.hills.height + 10,
+  image: images.hills,
+});
+const genericObjects = [
+  background,
+  background2,
+  hills,
 ];
+
 const keys = {
   right: {
     pressed: false,
@@ -85,8 +110,9 @@ let scrollOffset = 0;
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
-  player.update();
+  genericObjects.forEach((object) => object.draw());
   platforms.forEach((platform) => platform.draw());
+  player.update();
 
   if (
     keys.right.pressed &&
@@ -103,10 +129,16 @@ function animate() {
       platforms.forEach((platform) => {
         platform.position.x -= player.xVelocityOnPressed;
       });
+      genericObjects.forEach((object) => {
+        object.position.x -= xBackgroundVelocityOnPressed;
+      });
     } else if (keys.left.pressed) {
       scrollOffset -= 5;
       platforms.forEach((platform) => {
         platform.position.x += player.xVelocityOnPressed;
+      });
+      genericObjects.forEach((object) => {
+        object.position.x += xBackgroundVelocityOnPressed;
       });
     }
   }

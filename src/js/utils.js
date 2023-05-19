@@ -13,4 +13,11 @@ function distance(x1, y1, x2, y2) {
   return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2))
 }
 
-module.exports = { randomIntFromRange, randomColor, distance }
+function createImage(imageSrc) {
+  const image = new Image();
+  image.src = imageSrc;
+
+  return image;
+}
+
+module.exports = { randomIntFromRange, randomColor, distance, createImage }

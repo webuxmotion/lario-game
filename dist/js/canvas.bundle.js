@@ -86,24 +86,68 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./src/img/background.png":
+/*!********************************!*\
+  !*** ./src/img/background.png ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "072d51bcc9c09311d4c2a6708b05bddc.png");
+
+/***/ }),
+
+/***/ "./src/img/hills.png":
+/*!***************************!*\
+  !*** ./src/img/hills.png ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "cfffe4c371f5e11d372b398a87c51dd0.png");
+
+/***/ }),
+
+/***/ "./src/img/platform.png":
+/*!******************************!*\
+  !*** ./src/img/platform.png ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "ffab39d3487de561be1a081fcfb3806d.png");
+
+/***/ }),
+
 /***/ "./src/js/canvas.js":
 /*!**************************!*\
   !*** ./src/js/canvas.js ***!
   \**************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+
 var canvas = document.getElementById("canvas");
 var c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-var gravity = 1.4; // ends before platform creation starts
+var gravity = 1.4;
+var xBackgroundVelocityOnPressed = 5; // ends before platform creation starts
 // https://youtu.be/4q2vvZn5aoo?t=2164
 
 var Player = /*#__PURE__*/function () {
@@ -158,43 +202,71 @@ var Player = /*#__PURE__*/function () {
   return Player;
 }();
 
-var Platform = /*#__PURE__*/function () {
-  function Platform(_ref) {
+var GenericObject = /*#__PURE__*/function () {
+  function GenericObject(_ref) {
     var x = _ref.x,
-        y = _ref.y;
+        y = _ref.y,
+        image = _ref.image;
 
-    _classCallCheck(this, Platform);
+    _classCallCheck(this, GenericObject);
 
     this.position = {
       x: x,
       y: y
     };
-    this.width = 200;
-    this.height = 20;
+    this.image = image;
+    this.width = this.image.width;
+    this.height = this.image.height;
   }
 
-  _createClass(Platform, [{
+  _createClass(GenericObject, [{
     key: "draw",
     value: function draw() {
-      c.fillStyle = "blue";
-      c.fillRect(this.position.x, this.position.y, this.width, this.height);
+      c.drawImage(this.image, this.position.x, this.position.y);
     }
   }]);
 
-  return Platform;
+  return GenericObject;
 }();
 
 var player = new Player();
-var platforms = [new Platform({
-  x: 200,
-  y: canvas.height - 200
-}), new Platform({
-  x: 300,
-  y: canvas.height - 100
-}), new Platform({
+var platforms = [new GenericObject({
+  x: 0,
+  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+}), new GenericObject({
+  x: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width - 3,
+  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+}), new GenericObject({
+  x: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width * 2 - 3 * 2,
+  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+}), new GenericObject({
   x: 400,
-  y: canvas.height - 150
+  y: canvas.height - 300,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+}), new GenericObject({
+  x: 600,
+  y: canvas.height - 600,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
 })];
+var background = new GenericObject({
+  x: -1,
+  y: -1,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background
+});
+var background2 = new GenericObject({
+  x: -1,
+  y: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background.height - 3,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background
+});
+var hills = new GenericObject({
+  x: -1,
+  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].hills.height + 10,
+  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].hills
+});
+var genericObjects = [background, background2, hills];
 var keys = {
   right: {
     pressed: false
@@ -208,10 +280,13 @@ var scrollOffset = 0;
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
-  player.update();
+  genericObjects.forEach(function (object) {
+    return object.draw();
+  });
   platforms.forEach(function (platform) {
     return platform.draw();
   });
+  player.update();
 
   if (keys.right.pressed && player.position.x + player.width < canvas.width / 2) {
     player.velocity.x = player.xVelocityOnPressed;
@@ -225,10 +300,16 @@ function animate() {
       platforms.forEach(function (platform) {
         platform.position.x -= player.xVelocityOnPressed;
       });
+      genericObjects.forEach(function (object) {
+        object.position.x -= xBackgroundVelocityOnPressed;
+      });
     } else if (keys.left.pressed) {
       scrollOffset -= 5;
       platforms.forEach(function (platform) {
         platform.position.x += player.xVelocityOnPressed;
+      });
+      genericObjects.forEach(function (object) {
+        object.position.x += xBackgroundVelocityOnPressed;
       });
     }
   }
@@ -290,6 +371,68 @@ addEventListener("keyup", function (_ref3) {
     default:
   }
 });
+
+/***/ }),
+
+/***/ "./src/js/images.js":
+/*!**************************!*\
+  !*** ./src/js/images.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _img_platform_png__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../img/platform.png */ "./src/img/platform.png");
+/* harmony import */ var _img_hills_png__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../img/hills.png */ "./src/img/hills.png");
+/* harmony import */ var _img_background_png__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../img/background.png */ "./src/img/background.png");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  platform: Object(_utils__WEBPACK_IMPORTED_MODULE_3__["createImage"])(_img_platform_png__WEBPACK_IMPORTED_MODULE_0__["default"]),
+  hills: Object(_utils__WEBPACK_IMPORTED_MODULE_3__["createImage"])(_img_hills_png__WEBPACK_IMPORTED_MODULE_1__["default"]),
+  background: Object(_utils__WEBPACK_IMPORTED_MODULE_3__["createImage"])(_img_background_png__WEBPACK_IMPORTED_MODULE_2__["default"])
+});
+
+/***/ }),
+
+/***/ "./src/js/utils.js":
+/*!*************************!*\
+  !*** ./src/js/utils.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function randomIntFromRange(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+function randomColor(colors) {
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function distance(x1, y1, x2, y2) {
+  var xDist = x2 - x1;
+  var yDist = y2 - y1;
+  return Math.sqrt(Math.pow(xDist, 2) + Math.pow(yDist, 2));
+}
+
+function createImage(imageSrc) {
+  var image = new Image();
+  image.src = imageSrc;
+  return image;
+}
+
+module.exports = {
+  randomIntFromRange: randomIntFromRange,
+  randomColor: randomColor,
+  distance: distance,
+  createImage: createImage
+};
 
 /***/ })
 
