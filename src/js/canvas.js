@@ -1,4 +1,4 @@
-import images from './images';
+import images from "./images";
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -6,6 +6,7 @@ canvas.width = innerWidth;
 canvas.height = innerHeight;
 const gravity = 1.4;
 const xBackgroundVelocityOnPressed = 5;
+let lastKey;
 // ends before platform creation starts
 // https://youtu.be/4q2vvZn5aoo?t=2164
 
@@ -13,24 +14,60 @@ class Player {
   constructor() {
     this.position = {
       x: 100,
-      y: canvas.height - 200,
+      y: canvas.height - 700,
     };
     this.velocity = {
       x: 0,
       y: 20,
     };
-    this.width = 30;
-    this.height = 30;
+    this.width = 66;
+    this.height = 150;
     this.jumpVelocity = 30;
     this.xVelocityOnPressed = 10;
+    this.image = images.spriteStandRight;
+    this.frames = 0;
+    this.sprites = {
+      stand: {
+        right: images.spriteStandRight,
+        left: images.spriteStandLeft,
+        cropWidth: 177,
+        width: 66
+      },
+      run: {
+        right: images.spriteRunRight,
+        left: images.spriteRunLeft,
+        cropWidth: 341,
+        width: 127.875
+      }
+    }
+    this.currentSprite = this.sprites.stand.right;
+    this.currentCropWidth = this.sprites.stand.cropWidth;
   }
 
   draw() {
-    c.fillStyle = "red";
-    c.fillRect(this.position.x, this.position.y, this.width, this.height);
+    c.drawImage(
+      this.currentSprite,
+      this.currentCropWidth * this.frames,
+      0,
+      this.currentCropWidth,
+      400,
+      this.position.x,
+      this.position.y,
+      this.width,
+      this.height
+    );
   }
 
   update() {
+    this.frames++;
+
+    if (this.frames > 59 && (this.currentSprite === this.sprites.stand.right || 
+    this.currentSprite === this.sprites.stand.left)) {
+      this.frames = 0;
+    } else if (this.frames > 29 && (this.currentSprite === this.sprites.run.right ||
+    this.currentSprite === this.sprites.run.left)) {
+      this.frames = 0;
+    }
     this.draw();
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -56,7 +93,7 @@ class GenericObject {
   constructor({ x, y, image }) {
     this.position = {
       x,
-      y
+      y,
     };
     this.image = image;
     this.width = this.image.width;
@@ -70,12 +107,24 @@ class GenericObject {
 
 const player = new Player();
 const platforms = [
-    new GenericObject({ x: 0, y: canvas.height - images.platform.height, image: images.platform }),
-    new GenericObject({ x: images.platform.width - 3, y: canvas.height - images.platform.height, image: images.platform }),
-    new GenericObject({ x: images.platform.width * 2 - 3*2, y: canvas.height - images.platform.height, image: images.platform }),
-    new GenericObject({ x: 400, y: canvas.height - 300, image: images.platform }),
-    new GenericObject({ x: 600, y: canvas.height - 600, image: images.platform }),
-  ];
+  new GenericObject({
+    x: 0,
+    y: canvas.height - images.platform.height,
+    image: images.platform,
+  }),
+  new GenericObject({
+    x: images.platform.width - 3,
+    y: canvas.height - images.platform.height,
+    image: images.platform,
+  }),
+  new GenericObject({
+    x: images.platform.width * 2 - 3 * 2,
+    y: canvas.height - images.platform.height,
+    image: images.platform,
+  }),
+  new GenericObject({ x: 400, y: canvas.height - 300, image: images.platform }),
+  new GenericObject({ x: 600, y: canvas.height - 600, image: images.platform }),
+];
 const background = new GenericObject({
   x: -1,
   y: -1,
@@ -91,11 +140,7 @@ const hills = new GenericObject({
   y: canvas.height - images.hills.height + 10,
   image: images.hills,
 });
-const genericObjects = [
-  background,
-  background2,
-  hills,
-];
+const genericObjects = [background, background2, hills];
 
 const keys = {
   right: {
@@ -145,18 +190,53 @@ function animate() {
 
   platforms.forEach((platform) => {
     if (
-        player.position.y + player.height <= platform.position.y &&
-        player.position.y + player.height + player.velocity.y >=
-          platform.position.y &&
-        player.position.x + player.width > platform.position.x &&
-        player.position.x < platform.position.x + platform.width
-      ) {
-        player.velocity.y = 0;
-      }
+      player.position.y + player.height <= platform.position.y &&
+      player.position.y + player.height + player.velocity.y >=
+        platform.position.y &&
+      player.position.x + player.width > platform.position.x &&
+      player.position.x < platform.position.x + platform.width
+    ) {
+      player.velocity.y = 0;
+    }
   });
 
+  if (
+    keys.right.pressed && 
+    lastKey === 'right' && 
+    player.currentSprite !== player.sprites.run.right
+  ) {
+    player.frames = 1;
+    player.currentSprite = player.sprites.run.right;
+    player.currentCropWidth = player.sprites.run.cropWidth;
+    player.width = player.sprites.run.width;
+  } else if (
+    keys.left.pressed && 
+    lastKey === 'left' && 
+    player.currentSprite !== player.sprites.run.left
+  ) {
+    player.currentSprite = player.sprites.run.left;
+    player.currentCropWidth = player.sprites.run.cropWidth;
+    player.width = player.sprites.run.width;
+  } else if (
+    !keys.left.pressed && 
+    lastKey === 'left' && 
+    player.currentSprite !== player.sprites.stand.left
+  ) {
+    player.currentSprite = player.sprites.stand.left;
+    player.currentCropWidth = player.sprites.stand.cropWidth;
+    player.width = player.sprites.stand.width;
+  } else if (
+    !keys.right.pressed && 
+    lastKey === 'right' && 
+    player.currentSprite !== player.sprites.stand.right
+  ) {
+    player.currentSprite = player.sprites.stand.right;
+    player.currentCropWidth = player.sprites.stand.cropWidth;
+    player.width = player.sprites.stand.width;
+  }
+
   if (scrollOffset > 2000) {
-    console.log('You win');
+    console.log("You win");
   }
 }
 
@@ -167,10 +247,12 @@ addEventListener("keydown", ({ code }) => {
     case "ArrowLeft":
     case "KeyA":
       keys.left.pressed = true;
+      lastKey = 'left';
       break;
     case "ArrowRight":
     case "KeyD":
       keys.right.pressed = true;
+      lastKey = 'right';
       break;
     case "ArrowUp":
     case "Space":
