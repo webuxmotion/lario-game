@@ -203,6 +203,15 @@ var xBackgroundVelocityOnPressed = 5;
 var lastKey; // ends before platform creation starts
 // https://youtu.be/4q2vvZn5aoo?t=2164
 
+var keys = {
+  right: {
+    pressed: false
+  },
+  left: {
+    pressed: false
+  }
+};
+
 var Player = /*#__PURE__*/function () {
   function Player() {
     _classCallCheck(this, Player);
@@ -261,8 +270,6 @@ var Player = /*#__PURE__*/function () {
 
       if (this.isAboveTheBottom()) {
         this.velocity.y += gravity;
-      } else {
-        this.velocity.y = 0;
       }
     }
   }, {
@@ -308,52 +315,56 @@ var GenericObject = /*#__PURE__*/function () {
 }();
 
 var player = new Player();
-var platforms = [new GenericObject({
-  x: 0,
-  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
-}), new GenericObject({
-  x: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width - 3,
-  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
-}), new GenericObject({
-  x: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width * 2 - 3 * 2,
-  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
-}), new GenericObject({
-  x: 400,
-  y: canvas.height - 300,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
-}), new GenericObject({
-  x: 600,
-  y: canvas.height - 600,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
-})];
-var background = new GenericObject({
-  x: -1,
-  y: -1,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background
-});
-var background2 = new GenericObject({
-  x: -1,
-  y: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background.height - 3,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background
-});
-var hills = new GenericObject({
-  x: -1,
-  y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].hills.height + 10,
-  image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].hills
-});
+var platforms;
+var background;
+var background2;
+var hills;
 var genericObjects = [background, background2, hills];
-var keys = {
-  right: {
-    pressed: false
-  },
-  left: {
-    pressed: false
-  }
-};
 var scrollOffset = 0;
+
+function init() {
+  player = new Player();
+  platforms = [new GenericObject({
+    x: 0,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+  }), new GenericObject({
+    x: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width - 3 + 300,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+  }), // the last platform
+  new GenericObject({
+    x: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width * 2 - 3 * 2 + 300,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+  }), new GenericObject({
+    x: 400,
+    y: canvas.height - 300,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+  }), new GenericObject({
+    x: 600,
+    y: canvas.height - 600,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform
+  })];
+  background = new GenericObject({
+    x: -1,
+    y: -1,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background
+  });
+  background2 = new GenericObject({
+    x: -1,
+    y: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background.height - 3,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].background
+  });
+  hills = new GenericObject({
+    x: -1,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_0__["default"].hills.height + 10,
+    image: _images__WEBPACK_IMPORTED_MODULE_0__["default"].hills
+  });
+  genericObjects = [background, background2, hills];
+  scrollOffset = 0;
+  lastKey = 'right';
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -368,21 +379,21 @@ function animate() {
 
   if (keys.right.pressed && player.position.x + player.width < canvas.width / 2) {
     player.velocity.x = player.xVelocityOnPressed;
-  } else if (keys.left.pressed && player.position.x > 200) {
+  } else if (keys.left.pressed && player.position.x > 200 || keys.left.pressed && scrollOffset === 0 && player.position.x > 0) {
     player.velocity.x = -player.xVelocityOnPressed;
   } else {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-      scrollOffset += 5;
+      scrollOffset += player.xVelocityOnPressed;
       platforms.forEach(function (platform) {
         platform.position.x -= player.xVelocityOnPressed;
       });
       genericObjects.forEach(function (object) {
         object.position.x -= xBackgroundVelocityOnPressed;
       });
-    } else if (keys.left.pressed) {
-      scrollOffset -= 5;
+    } else if (keys.left.pressed && scrollOffset > 0) {
+      scrollOffset -= player.xVelocityOnPressed;
       platforms.forEach(function (platform) {
         platform.position.x += player.xVelocityOnPressed;
       });
@@ -417,11 +428,19 @@ function animate() {
     player.width = player.sprites.stand.width;
   }
 
-  if (scrollOffset > 2000) {
+  var lastPlatformX = _images__WEBPACK_IMPORTED_MODULE_0__["default"].platform.width * 2 - 3 * 2 + 300;
+
+  if (scrollOffset > lastPlatformX - canvas.width / 2 + 200) {
     console.log("You win");
+  }
+
+  if (player.position.y > canvas.height) {
+    console.log('You lose');
+    init();
   }
 }
 
+init();
 animate();
 addEventListener("keydown", function (_ref2) {
   var code = _ref2.code;
