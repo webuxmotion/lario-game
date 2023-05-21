@@ -6,6 +6,7 @@ import spriteRunLeft from '../img/spriteRunLeft.png';
 import spriteRunRight from '../img/spriteRunRight.png';
 import spriteStandLeft from '../img/spriteStandLeft.png';
 import spriteStandRight from '../img/spriteStandRight.png';
+import blocks from '../img/blocks.png';
 
 export default {
   platform: createImage(platformSrc),
@@ -15,4 +16,5 @@ export default {
   spriteRunRight: createImage(spriteRunRight),
   spriteStandLeft: createImage(spriteStandLeft),
   spriteStandRight: createImage(spriteStandRight),
+  blocks: createImage(blocks),
 }
