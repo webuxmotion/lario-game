@@ -1,4 +1,5 @@
 import Block from "./Block";
+import getGoombas from "./goombas";
 import GenericObject from "./GenericObject";
 import Player from "./Player";
 import images from "./images";
@@ -8,10 +9,16 @@ const c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 export const gravity = 1.4;
-const xBackgroundVelocityOnPressed = 5;
+const backgroundSpeed = 5;
 let lastKey;
-// ends before platform creation starts
-// https://youtu.be/4q2vvZn5aoo?t=2164
+let player = new Player();
+let platforms;
+let background;
+let background2;
+let hills;
+let genericObjects = [background, background2, hills];
+let goombas = [];
+let scrollOffset = 0;
 const keys = {
   right: {
     pressed: false,
@@ -21,16 +28,9 @@ const keys = {
   },
 };
 
-let player = new Player();
-let platforms;
-let background;
-let background2;
-let hills;
-let genericObjects = [background, background2, hills];
-let scrollOffset = 0;
-
 function init() {
   player = new Player();
+  goombas = getGoombas();
   platforms = [
     new Block({
       x: 400,
@@ -87,57 +87,101 @@ function init() {
   scrollOffset = 0;
   lastKey = "right";
 }
-let angle = 0;
 
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
   genericObjects.forEach((object) => object.draw({ c }));
   platforms.forEach((platform) => platform.draw({ c }));
+  goombas.forEach((goomba, index) => {
+    goomba.update({ c });
+
+    if (collisitionTop({ object1: player, object2: goomba })) {
+      player.velocity.y = -20;
+
+      setTimeout(() => {
+        goombas.splice(index, 1);
+      }, 0);
+    } else if (
+      player.position.x + player.width >= goomba.position.x &&
+      player.position.y + player.height >= goomba.position.y &&
+      player.position.x <= goomba.position.x + goomba.width &&
+      player.position.y <= goomba.position.y + goomba.height
+    ) {
+      init();
+    }
+  });
   player.update({ c, canvas });
 
   if (
     keys.right.pressed &&
     player.position.x + player.width < canvas.width / 2
   ) {
-    player.velocity.x = player.xVelocityOnPressed;
+    player.velocity.x = player.speed;
   } else if (
     (keys.left.pressed && player.position.x > 200) ||
     (keys.left.pressed && scrollOffset === 0 && player.position.x > 0)
   ) {
-    player.velocity.x = -player.xVelocityOnPressed;
+    player.velocity.x = -player.speed;
   } else {
     player.velocity.x = 0;
 
     if (keys.right.pressed) {
-      scrollOffset += player.xVelocityOnPressed;
+      scrollOffset += player.speed;
       platforms.forEach((platform) => {
-        platform.position.x -= player.xVelocityOnPressed;
+        platform.position.x -= player.speed;
+      });
+      goombas.forEach((goomba) => {
+        goomba.position.x -= player.speed;
       });
       genericObjects.forEach((object) => {
-        object.position.x -= xBackgroundVelocityOnPressed;
+        object.position.x -= backgroundSpeed;
       });
     } else if (keys.left.pressed && scrollOffset > 0) {
-      scrollOffset -= player.xVelocityOnPressed;
+      scrollOffset -= player.speed;
       platforms.forEach((platform) => {
-        platform.position.x += player.xVelocityOnPressed;
+        platform.position.x += player.speed;
+      });
+      goombas.forEach((goomba) => {
+        goomba.position.x += player.speed;
       });
       genericObjects.forEach((object) => {
-        object.position.x += xBackgroundVelocityOnPressed;
+        object.position.x += backgroundSpeed;
       });
     }
   }
 
-  platforms.forEach((platform) => {
-    if (
-      player.position.y + player.height <= platform.position.y &&
-      player.position.y + player.height + player.velocity.y >=
+  function isOnTopOfPlatform({ object, platform }) {
+    return (
+      object.position.y + object.height <= platform.position.y &&
+      object.position.y + object.height + object.velocity.y >=
         platform.position.y &&
-      player.position.x + player.width > platform.position.x &&
-      player.position.x < platform.position.x + platform.width
-    ) {
+      object.position.x + object.width > platform.position.x &&
+      object.position.x < platform.position.x + platform.width
+    );
+  }
+
+  function collisitionTop({ object1, object2 }) {
+    return (
+      object1.position.y + object1.height <= object2.position.y &&
+      object1.position.y + object1.height + object1.velocity.y >=
+        object2.position.y &&
+      object1.position.x + object1.width > object2.position.x &&
+      object1.position.x < object2.position.x + object2.width
+    );
+  }
+
+  // platform collision detection
+  platforms.forEach((platform) => {
+    if (isOnTopOfPlatform({ object: player, platform })) {
       player.velocity.y = 0;
     }
+
+    goombas.forEach((goomba) => {
+      if (isOnTopOfPlatform({ object: goomba, platform })) {
+        goomba.velocity.y = 0;
+      }
+    });
   });
 
   if (
@@ -188,8 +232,6 @@ function animate() {
 window.onload = () => {
   init();
   animate();
-
-  console.log(images);
 };
 
 addEventListener("keydown", ({ code }) => {

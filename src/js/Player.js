@@ -14,7 +14,7 @@ class Player {
     this.width = 66;
     this.height = 150;
     this.jumpVelocity = 30;
-    this.xVelocityOnPressed = 10;
+    this.speed = 10;
     this.image = images.spriteStandRight;
     this.frames = 0;
     this.sprites = {
