@@ -138,6 +138,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/img/spriteGoomba.png":
+/*!**********************************!*\
+  !*** ./src/img/spriteGoomba.png ***!
+  \**********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "a1de12fbeda5f4cadc1c0cec27c01014.png");
+
+/***/ }),
+
 /***/ "./src/img/spriteRunLeft.png":
 /*!***********************************!*\
   !*** ./src/img/spriteRunLeft.png ***!
@@ -326,11 +339,13 @@ var GenericObject = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./canvas */ "./src/js/canvas.js");
+/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -349,21 +364,28 @@ var Goomba = /*#__PURE__*/function () {
       x: velocity.x,
       y: velocity.y
     };
-    this.width = 50;
+    this.width = 43;
     this.height = 50;
+    this.image = _images__WEBPACK_IMPORTED_MODULE_1__["default"].goomba;
+    this.frames = 0;
   }
 
   _createClass(Goomba, [{
     key: "draw",
     value: function draw(_ref2) {
       var c = _ref2.c;
-      c.fillStyle = 'red';
-      c.fillRect(this.position.x, this.position.y, this.width, this.height);
+      c.drawImage(this.image, 130 * this.frames, 0, 130, 150, this.position.x, this.position.y, this.width, this.height);
     }
   }, {
     key: "update",
     value: function update(_ref3) {
       var c = _ref3.c;
+      this.frames++;
+
+      if (this.frames >= 58) {
+        this.frames = 0;
+      }
+
       this.draw({
         c: c
       });
@@ -390,6 +412,89 @@ var Goomba = /*#__PURE__*/function () {
 }();
 
 /* harmony default export */ __webpack_exports__["default"] = (Goomba);
+
+/***/ }),
+
+/***/ "./src/js/Particle.js":
+/*!****************************!*\
+  !*** ./src/js/Particle.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./canvas */ "./src/js/canvas.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var Particle = /*#__PURE__*/function () {
+  function Particle(_ref) {
+    var position = _ref.position,
+        velocity = _ref.velocity,
+        radius = _ref.radius;
+
+    _classCallCheck(this, Particle);
+
+    this.position = {
+      x: position.x,
+      y: position.y
+    };
+    this.velocity = {
+      x: velocity.x,
+      y: velocity.y
+    };
+    this.radius = radius;
+    this.ttl = 300;
+  }
+
+  _createClass(Particle, [{
+    key: "draw",
+    value: function draw(_ref2) {
+      var c = _ref2.c;
+      c.beginPath();
+      c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
+      c.fillStyle = "#654428";
+      c.fill();
+      c.closePath();
+    }
+  }, {
+    key: "update",
+    value: function update(_ref3) {
+      var c = _ref3.c;
+      this.draw({
+        c: c
+      });
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y; // gravity
+
+      if (this.isAboveTheBottom()) {
+        this.velocity.y += _canvas__WEBPACK_IMPORTED_MODULE_0__["gravity"] * 0.1;
+      }
+
+      this.ttl--;
+    }
+  }, {
+    key: "isAboveTheBottom",
+    value: function isAboveTheBottom() {
+      return this.getBaseY() <= canvas.height;
+    }
+  }, {
+    key: "getBaseY",
+    value: function getBaseY() {
+      return this.position.y + this.radius + this.velocity.y;
+    }
+  }]);
+
+  return Particle;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Particle);
 
 /***/ }),
 
@@ -451,13 +556,14 @@ var Player = /*#__PURE__*/function () {
 
   _createClass(Player, [{
     key: "draw",
-    value: function draw(c) {
+    value: function draw(_ref) {
+      var c = _ref.c;
       c.drawImage(this.currentSprite, this.currentCropWidth * this.frames, 0, this.currentCropWidth, 400, this.position.x, this.position.y, this.width, this.height);
     }
   }, {
     key: "update",
-    value: function update(_ref) {
-      var c = _ref.c;
+    value: function update(_ref2) {
+      var c = _ref2.c;
       this.frames++;
 
       if (this.frames > 59 && (this.currentSprite === this.sprites.stand.right || this.currentSprite === this.sprites.stand.left)) {
@@ -466,7 +572,9 @@ var Player = /*#__PURE__*/function () {
         this.frames = 0;
       }
 
-      this.draw(c);
+      this.draw({
+        c: c
+      });
       this.position.x += this.velocity.x;
       this.position.y += this.velocity.y; // gravity
 
@@ -503,11 +611,13 @@ var Player = /*#__PURE__*/function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gravity", function() { return gravity; });
-/* harmony import */ var _Block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Block */ "./src/js/Block.js");
-/* harmony import */ var _goombas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./goombas */ "./src/js/goombas.js");
-/* harmony import */ var _GenericObject__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GenericObject */ "./src/js/GenericObject.js");
-/* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Player */ "./src/js/Player.js");
-/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
+/* harmony import */ var _getGoombas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getGoombas */ "./src/js/getGoombas.js");
+/* harmony import */ var _GenericObject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GenericObject */ "./src/js/GenericObject.js");
+/* harmony import */ var _Player__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Player */ "./src/js/Player.js");
+/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
+/* harmony import */ var _getPlatforms__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./getPlatforms */ "./src/js/getPlatforms.js");
+/* harmony import */ var _Particle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Particle */ "./src/js/Particle.js");
+
 
 
 
@@ -520,13 +630,14 @@ canvas.height = innerHeight;
 var gravity = 1.4;
 var backgroundSpeed = 5;
 var lastKey;
-var player = new _Player__WEBPACK_IMPORTED_MODULE_3__["default"]();
+var player = new _Player__WEBPACK_IMPORTED_MODULE_2__["default"]();
 var platforms;
 var background;
 var background2;
 var hills;
 var genericObjects = [background, background2, hills];
 var goombas = [];
+var particles = [];
 var scrollOffset = 0;
 var keys = {
   right: {
@@ -538,50 +649,24 @@ var keys = {
 };
 
 function init() {
-  player = new _Player__WEBPACK_IMPORTED_MODULE_3__["default"]();
-  goombas = Object(_goombas__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  platforms = [new _Block__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    x: 400,
-    y: 400
-  }), new _Block__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    x: 400 + _Block__WEBPACK_IMPORTED_MODULE_0__["default"].sizes.width,
-    y: 400
-  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
-    x: 0,
-    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform.height,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform
-  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
-    x: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform.width - 3 + 300,
-    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform.height,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform
-  }), // the last platform
-  new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
-    x: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform.width * 2 - 3 * 2 + 300,
-    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform.height,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform
-  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
-    x: 400,
-    y: canvas.height - 300,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform
-  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
-    x: 600,
-    y: canvas.height - 600,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform
-  })];
-  background = new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
+  player = new _Player__WEBPACK_IMPORTED_MODULE_2__["default"]();
+  goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_0__["default"])();
+  particles = [];
+  platforms = Object(_getPlatforms__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  background = new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
     x: -1,
     y: -1,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].background
+    image: _images__WEBPACK_IMPORTED_MODULE_3__["default"].background
   });
-  background2 = new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
+  background2 = new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
     x: -1,
-    y: _images__WEBPACK_IMPORTED_MODULE_4__["default"].background.height - 3,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].background
+    y: _images__WEBPACK_IMPORTED_MODULE_3__["default"].background.height - 3,
+    image: _images__WEBPACK_IMPORTED_MODULE_3__["default"].background
   });
-  hills = new _GenericObject__WEBPACK_IMPORTED_MODULE_2__["default"]({
+  hills = new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
     x: -1,
-    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_4__["default"].hills.height + 10,
-    image: _images__WEBPACK_IMPORTED_MODULE_4__["default"].hills
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_3__["default"].hills.height + 10,
+    image: _images__WEBPACK_IMPORTED_MODULE_3__["default"].hills
   });
   genericObjects = [background, background2, hills];
   scrollOffset = 0;
@@ -612,15 +697,33 @@ function animate() {
     })) {
       player.velocity.y = -20;
       setTimeout(function () {
+        for (var i = 0; i < 50; i++) {
+          particles.push(new _Particle__WEBPACK_IMPORTED_MODULE_5__["default"]({
+            position: {
+              x: goomba.position.x + goomba.width / 2,
+              y: goomba.position.y + goomba.height / 2
+            },
+            velocity: {
+              x: (Math.random() - 0.5) * 10,
+              y: (Math.random() - 0.5) * 7
+            },
+            radius: Math.random() * 3
+          }));
+        }
+
         goombas.splice(index, 1);
       }, 0);
     } else if (player.position.x + player.width >= goomba.position.x && player.position.y + player.height >= goomba.position.y && player.position.x <= goomba.position.x + goomba.width && player.position.y <= goomba.position.y + goomba.height) {
       init();
     }
   });
+  particles.forEach(function (particle) {
+    return particle.update({
+      c: c
+    });
+  });
   player.update({
-    c: c,
-    canvas: canvas
+    c: c
   });
 
   if (keys.right.pressed && player.position.x + player.width < canvas.width / 2) {
@@ -628,7 +731,7 @@ function animate() {
   } else if (keys.left.pressed && player.position.x > 200 || keys.left.pressed && scrollOffset === 0 && player.position.x > 0) {
     player.velocity.x = -player.speed;
   } else {
-    player.velocity.x = 0;
+    player.velocity.x = 0; // scrolling code
 
     if (keys.right.pressed) {
       scrollOffset += player.speed;
@@ -637,6 +740,9 @@ function animate() {
       });
       goombas.forEach(function (goomba) {
         goomba.position.x -= player.speed;
+      });
+      particles.forEach(function (particle) {
+        particle.position.x -= player.speed;
       });
       genericObjects.forEach(function (object) {
         object.position.x -= backgroundSpeed;
@@ -648,6 +754,9 @@ function animate() {
       });
       goombas.forEach(function (goomba) {
         goomba.position.x += player.speed;
+      });
+      particles.forEach(function (particle) {
+        particle.position.x += player.speed;
       });
       genericObjects.forEach(function (object) {
         object.position.x += backgroundSpeed;
@@ -661,9 +770,15 @@ function animate() {
     return object.position.y + object.height <= platform.position.y && object.position.y + object.height + object.velocity.y >= platform.position.y && object.position.x + object.width > platform.position.x && object.position.x < platform.position.x + platform.width;
   }
 
-  function collisitionTop(_ref2) {
-    var object1 = _ref2.object1,
-        object2 = _ref2.object2;
+  function isCircleOnTopOfPlatform(_ref2) {
+    var object = _ref2.object,
+        platform = _ref2.platform;
+    return object.position.y + object.radius <= platform.position.y && object.position.y + object.radius + object.velocity.y >= platform.position.y && object.position.x + object.radius > platform.position.x && object.position.x < platform.position.x + platform.width;
+  }
+
+  function collisitionTop(_ref3) {
+    var object1 = _ref3.object1,
+        object2 = _ref3.object2;
     return object1.position.y + object1.height <= object2.position.y && object1.position.y + object1.height + object1.velocity.y >= object2.position.y && object1.position.x + object1.width > object2.position.x && object1.position.x < object2.position.x + object2.width;
   } // platform collision detection
 
@@ -676,6 +791,22 @@ function animate() {
       player.velocity.y = 0;
     }
 
+    particles.forEach(function (particle, index) {
+      if (isCircleOnTopOfPlatform({
+        object: particle,
+        platform: platform
+      })) {
+        particle.velocity.y = -particle.velocity.y * 0.9;
+
+        if (particle.radius - 0.8 < 0) {
+          particles.splice(index, 1);
+        } else {
+          particle.radius -= 0.8;
+        }
+      }
+
+      if (particle.ttl < 0) particles.splice(index, 1);
+    });
     goombas.forEach(function (goomba) {
       if (isOnTopOfPlatform({
         object: goomba,
@@ -705,7 +836,7 @@ function animate() {
     player.width = player.sprites.stand.width;
   }
 
-  var lastPlatformX = _images__WEBPACK_IMPORTED_MODULE_4__["default"].platform.width * 2 - 3 * 2 + 300;
+  var lastPlatformX = _images__WEBPACK_IMPORTED_MODULE_3__["default"].platform.width * 2 - 3 * 2 + 300;
 
   if (scrollOffset > lastPlatformX - canvas.width / 2 + 200) {
     console.log("You win");
@@ -722,8 +853,8 @@ window.onload = function () {
   animate();
 };
 
-addEventListener("keydown", function (_ref3) {
-  var code = _ref3.code;
+addEventListener("keydown", function (_ref4) {
+  var code = _ref4.code;
 
   switch (code) {
     case "ArrowLeft":
@@ -747,8 +878,8 @@ addEventListener("keydown", function (_ref3) {
     default:
   }
 });
-addEventListener("keyup", function (_ref4) {
-  var code = _ref4.code;
+addEventListener("keyup", function (_ref5) {
+  var code = _ref5.code;
 
   switch (code) {
     case "ArrowLeft":
@@ -772,10 +903,10 @@ addEventListener("keyup", function (_ref4) {
 
 /***/ }),
 
-/***/ "./src/js/goombas.js":
-/*!***************************!*\
-  !*** ./src/js/goombas.js ***!
-  \***************************/
+/***/ "./src/js/getGoombas.js":
+/*!******************************!*\
+  !*** ./src/js/getGoombas.js ***!
+  \******************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -805,7 +936,7 @@ var getGoombas = function getGoombas() {
     }
   }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
     position: {
-      x: 1000,
+      x: 1500,
       y: 200
     },
     velocity: {
@@ -816,6 +947,57 @@ var getGoombas = function getGoombas() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (getGoombas);
+
+/***/ }),
+
+/***/ "./src/js/getPlatforms.js":
+/*!********************************!*\
+  !*** ./src/js/getPlatforms.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Block__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Block */ "./src/js/Block.js");
+/* harmony import */ var _GenericObject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GenericObject */ "./src/js/GenericObject.js");
+/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
+
+
+
+
+var getPlatforms = function getPlatforms() {
+  return [new _Block__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 400,
+    y: 400
+  }), new _Block__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 400 + _Block__WEBPACK_IMPORTED_MODULE_0__["default"].sizes.width,
+    y: 400
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    x: 0,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    x: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform.width - 3 + 300,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform
+  }), // the last platform
+  new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    x: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform.width * 2 - 3 * 2 + 300,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    x: 400,
+    y: canvas.height - 300,
+    image: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
+    x: 600,
+    y: canvas.height - 600,
+    image: _images__WEBPACK_IMPORTED_MODULE_2__["default"].platform
+  })];
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (getPlatforms);
 
 /***/ }),
 
@@ -838,6 +1020,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_spriteStandLeft_png__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../img/spriteStandLeft.png */ "./src/img/spriteStandLeft.png");
 /* harmony import */ var _img_spriteStandRight_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../img/spriteStandRight.png */ "./src/img/spriteStandRight.png");
 /* harmony import */ var _img_blocks_png__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../img/blocks.png */ "./src/img/blocks.png");
+/* harmony import */ var _img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../img/spriteGoomba.png */ "./src/img/spriteGoomba.png");
+
 
 
 
@@ -855,7 +1039,8 @@ __webpack_require__.r(__webpack_exports__);
   spriteRunRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteRunRight_png__WEBPACK_IMPORTED_MODULE_5__["default"]),
   spriteStandLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteStandLeft_png__WEBPACK_IMPORTED_MODULE_6__["default"]),
   spriteStandRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteStandRight_png__WEBPACK_IMPORTED_MODULE_7__["default"]),
-  blocks: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blocks_png__WEBPACK_IMPORTED_MODULE_8__["default"])
+  blocks: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blocks_png__WEBPACK_IMPORTED_MODULE_8__["default"]),
+  goomba: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_9__["default"])
 });
 
 /***/ }),

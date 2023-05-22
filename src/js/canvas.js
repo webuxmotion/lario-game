@@ -1,8 +1,9 @@
-import Block from "./Block";
-import getGoombas from "./goombas";
+import getGoombas from "./getGoombas";
 import GenericObject from "./GenericObject";
 import Player from "./Player";
 import images from "./images";
+import getPlatforms from "./getPlatforms";
+import Particle from "./Particle";
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -18,6 +19,7 @@ let background2;
 let hills;
 let genericObjects = [background, background2, hills];
 let goombas = [];
+let particles = [];
 let scrollOffset = 0;
 const keys = {
   right: {
@@ -31,42 +33,8 @@ const keys = {
 function init() {
   player = new Player();
   goombas = getGoombas();
-  platforms = [
-    new Block({
-      x: 400,
-      y: 400,
-    }),
-    new Block({
-      x: 400 + Block.sizes.width,
-      y: 400,
-    }),
-    new GenericObject({
-      x: 0,
-      y: canvas.height - images.platform.height,
-      image: images.platform,
-    }),
-    new GenericObject({
-      x: images.platform.width - 3 + 300,
-      y: canvas.height - images.platform.height,
-      image: images.platform,
-    }),
-    // the last platform
-    new GenericObject({
-      x: images.platform.width * 2 - 3 * 2 + 300,
-      y: canvas.height - images.platform.height,
-      image: images.platform,
-    }),
-    new GenericObject({
-      x: 400,
-      y: canvas.height - 300,
-      image: images.platform,
-    }),
-    new GenericObject({
-      x: 600,
-      y: canvas.height - 600,
-      image: images.platform,
-    }),
-  ];
+  particles = [];
+  platforms = getPlatforms();
   background = new GenericObject({
     x: -1,
     y: -1,
@@ -100,6 +68,20 @@ function animate() {
       player.velocity.y = -20;
 
       setTimeout(() => {
+        for (let i = 0; i < 50; i++) {
+          particles.push(new Particle({
+            position: {
+              x: goomba.position.x + goomba.width / 2,
+              y: goomba.position.y + goomba.height / 2,
+            },
+            velocity: {
+              x: (Math.random() - 0.5) * 10,
+              y: (Math.random() - 0.5) * 7,
+            },
+            radius: Math.random() * 3,
+          }));
+        }
+
         goombas.splice(index, 1);
       }, 0);
     } else if (
@@ -111,7 +93,8 @@ function animate() {
       init();
     }
   });
-  player.update({ c, canvas });
+  particles.forEach((particle) => particle.update({ c }));
+  player.update({ c });
 
   if (
     keys.right.pressed &&
@@ -126,6 +109,7 @@ function animate() {
   } else {
     player.velocity.x = 0;
 
+    // scrolling code
     if (keys.right.pressed) {
       scrollOffset += player.speed;
       platforms.forEach((platform) => {
@@ -133,6 +117,9 @@ function animate() {
       });
       goombas.forEach((goomba) => {
         goomba.position.x -= player.speed;
+      });
+      particles.forEach((particle) => {
+        particle.position.x -= player.speed;
       });
       genericObjects.forEach((object) => {
         object.position.x -= backgroundSpeed;
@@ -144,6 +131,9 @@ function animate() {
       });
       goombas.forEach((goomba) => {
         goomba.position.x += player.speed;
+      });
+      particles.forEach((particle) => {
+        particle.position.x += player.speed;
       });
       genericObjects.forEach((object) => {
         object.position.x += backgroundSpeed;
@@ -157,6 +147,16 @@ function animate() {
       object.position.y + object.height + object.velocity.y >=
         platform.position.y &&
       object.position.x + object.width > platform.position.x &&
+      object.position.x < platform.position.x + platform.width
+    );
+  }
+
+  function isCircleOnTopOfPlatform({ object, platform }) {
+    return (
+      object.position.y + object.radius <= platform.position.y &&
+      object.position.y + object.radius + object.velocity.y >=
+        platform.position.y &&
+      object.position.x + object.radius > platform.position.x &&
       object.position.x < platform.position.x + platform.width
     );
   }
@@ -176,6 +176,20 @@ function animate() {
     if (isOnTopOfPlatform({ object: player, platform })) {
       player.velocity.y = 0;
     }
+
+    particles.forEach((particle, index) => {
+      if (isCircleOnTopOfPlatform({ object: particle, platform })) {
+        particle.velocity.y = -particle.velocity.y * 0.9;
+
+        if (particle.radius - 0.8 < 0) {
+          particles.splice(index, 1);
+        } else {
+          particle.radius -= 0.8;
+        }
+      }
+
+      if (particle.ttl < 0) particles.splice(index, 1);
+    })
 
     goombas.forEach((goomba) => {
       if (isOnTopOfPlatform({ object: goomba, platform })) {

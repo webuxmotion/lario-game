@@ -1,50 +1,49 @@
 import { gravity } from "./canvas";
-import images from "./images";
 
-class Goomba {
-  constructor({ position, velocity }) {
+class Particle {
+  constructor({
+    position,
+    velocity,
+    radius,
+  }) {
     this.position = {
       x: position.x,
       y: position.y,
-    }
+    };
     this.velocity = {
       x: velocity.x,
       y: velocity.y,
     }
-
-    this.width = 43;
-    this.height = 50;
-    this.image = images.goomba;
-    this.frames = 0;
+    this.radius = radius;
+    this.ttl = 300;
   }
 
   draw({ c }) {
-    c.drawImage(
-      this.image,
-      130 * this.frames,
-      0,
-      130,
-      150,
+    c.beginPath();
+    c.arc(
       this.position.x,
       this.position.y,
-      this.width,
-      this.height
+      this.radius,
+      0,
+      Math.PI * 2,
+      false
     );
+    c.fillStyle = "#654428";
+    c.fill();
+    c.closePath();
   }
 
   update({ c }) {
-    this.frames++;
-    if (this.frames >= 58) {
-      this.frames = 0;
-    }
     this.draw({ c });
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
     // gravity
     if (this.isAboveTheBottom()) {
-      this.velocity.y += gravity;
+      this.velocity.y += gravity * 0.1;
     }
+
+    this.ttl--;
   }
 
   isAboveTheBottom() {
@@ -52,8 +51,8 @@ class Goomba {
   }
 
   getBaseY() {
-    return this.position.y + this.height + this.velocity.y;
+    return this.position.y + this.radius + this.velocity.y;
   }
 }
 
-export default Goomba;
+export default Particle;

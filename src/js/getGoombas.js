@@ -23,7 +23,7 @@ const getGoombas = () => [
   }),
   new Goomba({
     position: {
-      x: 1000,
+      x: 1500,
       y: 200,
     },
     velocity: {

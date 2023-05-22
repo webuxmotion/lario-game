@@ -35,7 +35,7 @@ class Player {
     this.currentCropWidth = this.sprites.stand.cropWidth;
   }
 
-  draw(c) {
+  draw({ c }) {
     c.drawImage(
       this.currentSprite,
       this.currentCropWidth * this.frames,
@@ -59,7 +59,7 @@ class Player {
       this.currentSprite === this.sprites.run.left)) {
       this.frames = 0;
     }
-    this.draw(c);
+    this.draw({ c });
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
