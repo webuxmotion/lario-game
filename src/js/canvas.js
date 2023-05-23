@@ -4,6 +4,7 @@ import Player from "./Player";
 import images from "./images";
 import getPlatforms from "./getPlatforms";
 import Particle from "./Particle";
+import { collisitionTop, hitBottomOfPlatform, hitSideOfPlatform, isCircleOnTopOfPlatform, isOnTopOfPlatform } from "./utils";
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -59,8 +60,14 @@ function init() {
 function animate() {
   requestAnimationFrame(animate);
   c.clearRect(0, 0, canvas.width, canvas.height);
-  genericObjects.forEach((object) => object.draw({ c }));
-  platforms.forEach((platform) => platform.draw({ c }));
+  genericObjects.forEach((object) => {
+    object.update({ c });
+    object.velocity.x = 0;
+  });
+  platforms.forEach((platform) => {
+    platform.update({ c });
+    platform.velocity.x = 0;
+  });
   goombas.forEach((goomba, index) => {
     goomba.update({ c });
 
@@ -96,6 +103,8 @@ function animate() {
   particles.forEach((particle) => particle.update({ c }));
   player.update({ c });
 
+  let hitSide = false;
+
   if (
     keys.right.pressed &&
     player.position.x + player.width < canvas.width / 2
@@ -111,70 +120,76 @@ function animate() {
 
     // scrolling code
     if (keys.right.pressed) {
-      scrollOffset += player.speed;
-      platforms.forEach((platform) => {
-        platform.position.x -= player.speed;
-      });
-      goombas.forEach((goomba) => {
-        goomba.position.x -= player.speed;
-      });
-      particles.forEach((particle) => {
-        particle.position.x -= player.speed;
-      });
-      genericObjects.forEach((object) => {
-        object.position.x -= backgroundSpeed;
-      });
+
+      for (let i = 0; i < platforms.length; i++) {
+        const platform = platforms[i];
+        platform.velocity.x = -player.speed;
+
+        if (platform.block && hitSideOfPlatform({ object: player, platform })) {
+          platforms.forEach((el) => {
+            el.velocity.x = 0;
+          });
+          hitSide = true;
+          break;
+        }
+      }
+
+      if (!hitSide) {
+        scrollOffset += player.speed;
+
+        genericObjects.forEach((object) => {
+          object.velocity.x = -backgroundSpeed;
+        });
+        goombas.forEach((goomba) => {
+          goomba.position.x -= player.speed;
+        });
+        particles.forEach((particle) => {
+          particle.position.x -= player.speed;
+        });
+      }
     } else if (keys.left.pressed && scrollOffset > 0) {
-      scrollOffset -= player.speed;
-      platforms.forEach((platform) => {
-        platform.position.x += player.speed;
-      });
-      goombas.forEach((goomba) => {
-        goomba.position.x += player.speed;
-      });
-      particles.forEach((particle) => {
-        particle.position.x += player.speed;
-      });
-      genericObjects.forEach((object) => {
-        object.position.x += backgroundSpeed;
-      });
+      
+      for (let i = 0; i < platforms.length; i++) {
+        const platform = platforms[i];
+        platform.velocity.x = player.speed;
+
+        if (platform.block && hitSideOfPlatform({ object: player, platform })) {
+          platforms.forEach((el) => {
+            el.velocity.x = 0;
+          });
+          hitSide = true;
+          break;
+        }
+      }
+      
+      if (!hitSide) {
+        scrollOffset -= player.speed;
+        
+        genericObjects.forEach((object) => {
+          object.velocity.x = backgroundSpeed;
+        });
+        goombas.forEach((goomba) => {
+          goomba.position.x += player.speed;
+        });
+        particles.forEach((particle) => {
+          particle.position.x += player.speed;
+        });
+      }
     }
-  }
-
-  function isOnTopOfPlatform({ object, platform }) {
-    return (
-      object.position.y + object.height <= platform.position.y &&
-      object.position.y + object.height + object.velocity.y >=
-        platform.position.y &&
-      object.position.x + object.width > platform.position.x &&
-      object.position.x < platform.position.x + platform.width
-    );
-  }
-
-  function isCircleOnTopOfPlatform({ object, platform }) {
-    return (
-      object.position.y + object.radius <= platform.position.y &&
-      object.position.y + object.radius + object.velocity.y >=
-        platform.position.y &&
-      object.position.x + object.radius > platform.position.x &&
-      object.position.x < platform.position.x + platform.width
-    );
-  }
-
-  function collisitionTop({ object1, object2 }) {
-    return (
-      object1.position.y + object1.height <= object2.position.y &&
-      object1.position.y + object1.height + object1.velocity.y >=
-        object2.position.y &&
-      object1.position.x + object1.width > object2.position.x &&
-      object1.position.x < object2.position.x + object2.width
-    );
   }
 
   // platform collision detection
   platforms.forEach((platform) => {
     if (isOnTopOfPlatform({ object: player, platform })) {
       player.velocity.y = 0;
+    }
+
+    if (platform.block && hitBottomOfPlatform({ object: player, platform })) {
+      player.velocity.y = -player.velocity.y;
+    }
+
+    if (platform.block && hitSideOfPlatform({ object: player, platform })) {
+      player.velocity.x = 0;
     }
 
     particles.forEach((particle, index) => {
@@ -265,7 +280,10 @@ addEventListener("keydown", ({ code }) => {
     case "ArrowUp":
     case "Space":
     case "KeyW":
-      player.velocity.y = -player.jumpVelocity;
+      if (player.velocity.y === 0) {
+        player.velocity.y = -player.jumpVelocity;
+      }
+      
       if (lastKey === 'right') {
         player.currentSprite = player.sprites.jump.right;
       } else {

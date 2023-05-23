@@ -3,7 +3,7 @@ import Goomba from "./Goomba";
 const getGoombas = () => [
   new Goomba({
     position: {
-      x: 400,
+      x: 600,
       y: 200,
     },
     velocity: {

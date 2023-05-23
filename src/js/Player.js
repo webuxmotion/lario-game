@@ -13,7 +13,7 @@ class Player {
     };
     this.frameWidth = 398;
     this.frameHeight = 353;
-    this.scale = 0.4;
+    this.scale = 0.3;
     this.width = this.frameWidth * this.scale;
     this.height = this.frameHeight * this.scale;
     this.jumpVelocity = 30;

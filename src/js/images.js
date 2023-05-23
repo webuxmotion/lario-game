@@ -11,6 +11,8 @@ import spriteMarioJumpRight from '../img/spriteMarioJumpRight.png';
 
 import blocks from '../img/blocks.png';
 import goomba from '../img/spriteGoomba.png';
+import block from '../img/block.png';
+import blockTri from '../img/blockTri.png';
 
 export default {
   platform: createImage(platformSrc),
@@ -24,4 +26,6 @@ export default {
   spriteMarioJumpRight: createImage(spriteMarioJumpRight),
   blocks: createImage(blocks),
   goomba: createImage(goomba),
+  block: createImage(block),
+  blockTri: createImage(blockTri),
 }
