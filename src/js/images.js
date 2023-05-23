@@ -2,10 +2,13 @@ import { createImage } from './utils';
 import platformSrc from '../img/platform.png';
 import hillsSrc from '../img/hills.png';
 import backgroundSrc from '../img/background.png';
-import spriteRunLeft from '../img/spriteRunLeft.png';
-import spriteRunRight from '../img/spriteRunRight.png';
-import spriteStandLeft from '../img/spriteStandLeft.png';
-import spriteStandRight from '../img/spriteStandRight.png';
+import spriteMarioRunLeft from '../img/spriteMarioRunLeft.png';
+import spriteMarioRunRight from '../img/spriteMarioRunRight.png';
+import spriteMarioStandLeft from '../img/spriteMarioStandLeft.png';
+import spriteMarioStandRight from '../img/spriteMarioStandRight.png';
+import spriteMarioJumpLeft from '../img/spriteMarioJumpLeft.png';
+import spriteMarioJumpRight from '../img/spriteMarioJumpRight.png';
+
 import blocks from '../img/blocks.png';
 import goomba from '../img/spriteGoomba.png';
 
@@ -13,10 +16,12 @@ export default {
   platform: createImage(platformSrc),
   hills: createImage(hillsSrc),
   background: createImage(backgroundSrc),
-  spriteRunLeft: createImage(spriteRunLeft),
-  spriteRunRight: createImage(spriteRunRight),
-  spriteStandLeft: createImage(spriteStandLeft),
-  spriteStandRight: createImage(spriteStandRight),
+  spriteMarioRunLeft: createImage(spriteMarioRunLeft),
+  spriteMarioRunRight: createImage(spriteMarioRunRight),
+  spriteMarioStandLeft: createImage(spriteMarioStandLeft),
+  spriteMarioStandRight: createImage(spriteMarioStandRight),
+  spriteMarioJumpLeft: createImage(spriteMarioJumpLeft),
+  spriteMarioJumpRight: createImage(spriteMarioJumpRight),
   blocks: createImage(blocks),
   goomba: createImage(goomba),
 }

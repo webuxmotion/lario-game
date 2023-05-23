@@ -198,39 +198,41 @@ function animate() {
     });
   });
 
-  if (
-    keys.right.pressed &&
-    lastKey === "right" &&
-    player.currentSprite !== player.sprites.run.right
-  ) {
-    player.frames = 1;
-    player.currentSprite = player.sprites.run.right;
-    player.currentCropWidth = player.sprites.run.cropWidth;
-    player.width = player.sprites.run.width;
-  } else if (
-    keys.left.pressed &&
-    lastKey === "left" &&
-    player.currentSprite !== player.sprites.run.left
-  ) {
-    player.currentSprite = player.sprites.run.left;
-    player.currentCropWidth = player.sprites.run.cropWidth;
-    player.width = player.sprites.run.width;
-  } else if (
-    !keys.left.pressed &&
-    lastKey === "left" &&
-    player.currentSprite !== player.sprites.stand.left
-  ) {
-    player.currentSprite = player.sprites.stand.left;
-    player.currentCropWidth = player.sprites.stand.cropWidth;
-    player.width = player.sprites.stand.width;
-  } else if (
-    !keys.right.pressed &&
-    lastKey === "right" &&
-    player.currentSprite !== player.sprites.stand.right
-  ) {
-    player.currentSprite = player.sprites.stand.right;
-    player.currentCropWidth = player.sprites.stand.cropWidth;
-    player.width = player.sprites.stand.width;
+  if (player.velocity.y === 0) {
+    if (
+      keys.right.pressed &&
+      lastKey === "right" &&
+      player.currentSprite !== player.sprites.run.right
+    ) {
+      player.frames = 1;
+      player.currentSprite = player.sprites.run.right;
+      player.currentCropWidth = player.sprites.run.cropWidth;
+      player.width = player.sprites.run.width;
+    } else if (
+      keys.left.pressed &&
+      lastKey === "left" &&
+      player.currentSprite !== player.sprites.run.left
+    ) {
+      player.currentSprite = player.sprites.run.left;
+      player.currentCropWidth = player.sprites.run.cropWidth;
+      player.width = player.sprites.run.width;
+    } else if (
+      !keys.left.pressed &&
+      lastKey === "left" &&
+      player.currentSprite !== player.sprites.stand.left
+    ) {
+      player.currentSprite = player.sprites.stand.left;
+      player.currentCropWidth = player.sprites.stand.cropWidth;
+      player.width = player.sprites.stand.width;
+    } else if (
+      !keys.right.pressed &&
+      lastKey === "right" &&
+      player.currentSprite !== player.sprites.stand.right
+    ) {
+      player.currentSprite = player.sprites.stand.right;
+      player.currentCropWidth = player.sprites.stand.cropWidth;
+      player.width = player.sprites.stand.width;
+    }
   }
 
   const lastPlatformX = images.platform.width * 2 - 3 * 2 + 300;
@@ -264,6 +266,12 @@ addEventListener("keydown", ({ code }) => {
     case "Space":
     case "KeyW":
       player.velocity.y = -player.jumpVelocity;
+      if (lastKey === 'right') {
+        player.currentSprite = player.sprites.jump.right;
+      } else {
+        player.currentSprite = player.sprites.jump.left;
+      }
+      
       break;
     default:
   }
