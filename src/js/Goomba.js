@@ -2,7 +2,7 @@ import { gravity } from "./canvas";
 import images from "./images";
 
 class Goomba {
-  constructor({ position, velocity }) {
+  constructor({ position, velocity, distanceLimit = 50 }) {
     this.position = {
       x: position.x,
       y: position.y,
@@ -16,6 +16,9 @@ class Goomba {
     this.height = 50;
     this.image = images.goomba;
     this.frames = 0;
+
+    this.distanceLimit = distanceLimit;
+    this.distanceTraveled = 0;
   }
 
   draw({ c }) {
@@ -44,6 +47,14 @@ class Goomba {
     // gravity
     if (this.isAboveTheBottom()) {
       this.velocity.y += gravity;
+    }
+
+    // walk the goomba back and forth
+    this.distanceTraveled += Math.abs(this.velocity.x);
+
+    if (this.distanceTraveled > this.distanceLimit) {
+      this.distanceTraveled = 0;
+      this.velocity.x = -this.velocity.x;
     }
   }
 

@@ -10,6 +10,7 @@ const getGoombas = () => [
       x: -0.5,
       y: 0,
     },
+    distanceLimit: 200
   }),
   new Goomba({
     position: {
@@ -20,6 +21,7 @@ const getGoombas = () => [
       x: -0.5,
       y: 0,
     },
+    distanceLimit: 300
   }),
   new Goomba({
     position: {
