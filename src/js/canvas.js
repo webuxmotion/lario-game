@@ -2,8 +2,6 @@ import getGoombas from "./getGoombas";
 import GenericObject from "./GenericObject";
 import Player from "./Player";
 import images from "./images";
-import getPlatforms from "./getPlatforms";
-import Particle from "./Particle";
 import {
   collisitionTop,
   generateExplosion,
@@ -14,6 +12,8 @@ import {
   objectsTouch,
 } from "./utils";
 import getFlowers from "./getFlowers";
+import getPlatforms from "./getPlatforms";
+import Particle from "./Particle";
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -23,7 +23,7 @@ export const gravity = 1.4;
 const backgroundSpeed = 5;
 let lastKey;
 let player = new Player();
-let platforms;
+let platforms = [];
 let background;
 let background2;
 let hills;
@@ -32,6 +32,7 @@ let goombas = [];
 let flowers = [];
 let particles = [];
 let scrollOffset = 0;
+
 const keys = {
   right: {
     pressed: false,
@@ -45,7 +46,6 @@ function init() {
   player = new Player();
   goombas = getGoombas();
   particles = [];
-  platforms = getPlatforms();
   flowers = getFlowers();
   background = new GenericObject({
     x: -1,
@@ -66,6 +66,8 @@ function init() {
 
   scrollOffset = 0;
   lastKey = "right";
+
+  platforms = getPlatforms({ canvas });
 }
 
 function animate() {
@@ -289,9 +291,10 @@ function animate() {
     });
   });
 
-  const lastPlatformX = images.platform.width * 2 - 3 * 2 + 300;
-  if (scrollOffset > lastPlatformX - canvas.width / 2 + 200) {
-    console.log("You win");
+  
+  // win condition
+  if (images.platform && scrollOffset + 100 + player.width > 6968 + 300) {
+    console.log('you win')
   }
 
   if (player.position.y > canvas.height) {
@@ -430,4 +433,4 @@ addEventListener("keyup", ({ code }) => {
       break;
     default:
   }
-});
+});  

@@ -18,8 +18,9 @@ class GenericObject {
     c.drawImage(this.image, this.position.x, this.position.y);
 
     if (this.text) {
+      c.font = "20px Arial";
       c.fillStyle = 'red';
-      c.fillText('sdfsdf', this.position.x, this.position.y);
+      c.fillText(this.text, this.position.x, this.position.y);
     }
   }
 

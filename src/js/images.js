@@ -21,6 +21,9 @@ import goomba from '../img/spriteGoomba.png';
 import block from '../img/block.png';
 import blockTri from '../img/blockTri.png';
 import flower from '../img/spriteFireFlower.png';
+import lgPlatform from '../img/lgPlatform.png';
+import tPlatform from '../img/tPlatform.png';
+import xtPlatform from '../img/xtPlatform.png';
 
 export default {
   platform: createImage(platformSrc),
@@ -43,4 +46,7 @@ export default {
   block: createImage(block),
   blockTri: createImage(blockTri),
   flower: createImage(flower),
+  lgPlatform: createImage(lgPlatform),
+  tPlatform: createImage(tPlatform),
+  xtPlatform: createImage(xtPlatform),
 }
