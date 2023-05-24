@@ -9,10 +9,18 @@ import spriteMarioStandRight from '../img/spriteMarioStandRight.png';
 import spriteMarioJumpLeft from '../img/spriteMarioJumpLeft.png';
 import spriteMarioJumpRight from '../img/spriteMarioJumpRight.png';
 
+import spriteFireFlowerRunRight from '../img/spriteFireFlowerRunRight.png'
+import spriteFireFlowerRunLeft from '../img/spriteFireFlowerRunLeft.png'
+import spriteFireFlowerStandRight from '../img/spriteFireFlowerStandRight.png'
+import spriteFireFlowerStandLeft from '../img/spriteFireFlowerStandLeft.png'
+import spriteFireFlowerJumpRight from '../img/spriteFireFlowerJumpRight.png'
+import spriteFireFlowerJumpLeft from '../img/spriteFireFlowerJumpLeft.png'
+
 import blocks from '../img/blocks.png';
 import goomba from '../img/spriteGoomba.png';
 import block from '../img/block.png';
 import blockTri from '../img/blockTri.png';
+import flower from '../img/spriteFireFlower.png';
 
 export default {
   platform: createImage(platformSrc),
@@ -24,8 +32,15 @@ export default {
   spriteMarioStandRight: createImage(spriteMarioStandRight),
   spriteMarioJumpLeft: createImage(spriteMarioJumpLeft),
   spriteMarioJumpRight: createImage(spriteMarioJumpRight),
+  spriteFireFlowerRunLeft: createImage(spriteFireFlowerRunLeft),
+  spriteFireFlowerRunRight: createImage(spriteFireFlowerRunRight),
+  spriteFireFlowerStandLeft: createImage(spriteFireFlowerStandLeft),
+  spriteFireFlowerStandRight: createImage(spriteFireFlowerStandRight),
+  spriteFireFlowerJumpLeft: createImage(spriteFireFlowerJumpLeft),
+  spriteFireFlowerJumpRight: createImage(spriteFireFlowerJumpRight),
   blocks: createImage(blocks),
   goomba: createImage(goomba),
   block: createImage(block),
   blockTri: createImage(blockTri),
+  flower: createImage(flower),
 }

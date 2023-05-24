@@ -4,7 +4,16 @@ import Player from "./Player";
 import images from "./images";
 import getPlatforms from "./getPlatforms";
 import Particle from "./Particle";
-import { collisitionTop, hitBottomOfPlatform, hitSideOfPlatform, isCircleOnTopOfPlatform, isOnTopOfPlatform } from "./utils";
+import {
+  collisitionTop,
+  generateExplosion,
+  hitBottomOfPlatform,
+  hitSideOfPlatform,
+  isCircleOnTopOfPlatform,
+  isOnTopOfPlatform,
+  objectsTouch,
+} from "./utils";
+import getFlowers from "./getFlowers";
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -20,6 +29,7 @@ let background2;
 let hills;
 let genericObjects = [background, background2, hills];
 let goombas = [];
+let flowers = [];
 let particles = [];
 let scrollOffset = 0;
 const keys = {
@@ -36,6 +46,7 @@ function init() {
   goombas = getGoombas();
   particles = [];
   platforms = getPlatforms();
+  flowers = getFlowers();
   background = new GenericObject({
     x: -1,
     y: -1,
@@ -64,6 +75,21 @@ function animate() {
     object.update({ c });
     object.velocity.x = 0;
   });
+  flowers.forEach((flower, index) => {
+    if (
+      objectsTouch({
+        object1: player,
+        object2: flower,
+      })
+    ) {
+      player.powerUps.fireFlower = true;
+      setTimeout(() => {
+        flowers.splice(index, 1);
+      }, 0);
+    } else {
+      flower.update({ c });
+    }
+  });
   platforms.forEach((platform) => {
     platform.update({ c });
     platform.velocity.x = 0;
@@ -71,23 +97,38 @@ function animate() {
   goombas.forEach((goomba, index) => {
     goomba.update({ c });
 
+    // remove goomba on fireball hit
+    particles
+      .filter((particle) => particle.fireball)
+      .forEach((particle, particleIndex) => {
+        if (
+          particle.position.x + particle.radius >= goomba.position.x &&
+          particle.position.x - particle.radius <=
+            goomba.position.x + goomba.width &&
+          particle.position.y + particle.radius >= goomba.position.y &&
+          particle.position.y - particle.radius <=
+            goomba.position.y + goomba.height
+        ) {
+          generateExplosion({
+            particles,
+            object: goomba,
+          });
+
+          setTimeout(() => {
+            goombas.splice(index, 1);
+            particles.splice(particleIndex, 1);
+          }, 0);
+        }
+      });
+
     if (collisitionTop({ object1: player, object2: goomba })) {
       player.velocity.y = -20;
 
       setTimeout(() => {
-        for (let i = 0; i < 50; i++) {
-          particles.push(new Particle({
-            position: {
-              x: goomba.position.x + goomba.width / 2,
-              y: goomba.position.y + goomba.height / 2,
-            },
-            velocity: {
-              x: (Math.random() - 0.5) * 10,
-              y: (Math.random() - 0.5) * 7,
-            },
-            radius: Math.random() * 3,
-          }));
-        }
+        generateExplosion({
+          particles,
+          object: goomba,
+        });
 
         goombas.splice(index, 1);
       }, 0);
@@ -97,10 +138,35 @@ function animate() {
       player.position.x <= goomba.position.x + goomba.width &&
       player.position.y <= goomba.position.y + goomba.height
     ) {
-      init();
+      // player hits goomba
+      if (player.powerUps.fireFlower) {
+        player.invincible = true;
+        player.powerUps.fireFlower = false;
+
+        setTimeout(() => {
+          player.invincible = false;
+        }, 1000);
+      }
+      if (!player.invincible) {
+        init();
+      }
     }
   });
-  particles.forEach((particle) => particle.update({ c }));
+  particles.forEach((particle, index) => {
+    particle.update({ c });
+
+    if (
+      particle.fireball && (
+        particle.position.x + particle.radius >= canvas.width ||
+        particle.position.x - particle.radius <= 0
+      )
+    ) {
+      setTimeout(() => {
+        particles.splice(index, 1);
+      }, 0);
+    }
+  });
+  
   player.update({ c });
 
   let hitSide = false;
@@ -120,7 +186,6 @@ function animate() {
 
     // scrolling code
     if (keys.right.pressed) {
-
       for (let i = 0; i < platforms.length; i++) {
         const platform = platforms[i];
         platform.velocity.x = -player.speed;
@@ -143,12 +208,14 @@ function animate() {
         goombas.forEach((goomba) => {
           goomba.position.x -= player.speed;
         });
+        flowers.forEach((flower) => {
+          flower.position.x -= player.speed;
+        });
         particles.forEach((particle) => {
           particle.position.x -= player.speed;
         });
       }
     } else if (keys.left.pressed && scrollOffset > 0) {
-      
       for (let i = 0; i < platforms.length; i++) {
         const platform = platforms[i];
         platform.velocity.x = player.speed;
@@ -161,15 +228,18 @@ function animate() {
           break;
         }
       }
-      
+
       if (!hitSide) {
         scrollOffset -= player.speed;
-        
+
         genericObjects.forEach((object) => {
           object.velocity.x = backgroundSpeed;
         });
         goombas.forEach((goomba) => {
           goomba.position.x += player.speed;
+        });
+        flowers.forEach((flower) => {
+          flower.position.x += player.speed;
         });
         particles.forEach((particle) => {
           particle.position.x += player.speed;
@@ -204,51 +274,20 @@ function animate() {
       }
 
       if (particle.ttl < 0) particles.splice(index, 1);
-    })
+    });
 
     goombas.forEach((goomba) => {
       if (isOnTopOfPlatform({ object: goomba, platform })) {
         goomba.velocity.y = 0;
       }
     });
-  });
 
-  if (player.velocity.y === 0) {
-    if (
-      keys.right.pressed &&
-      lastKey === "right" &&
-      player.currentSprite !== player.sprites.run.right
-    ) {
-      player.frames = 1;
-      player.currentSprite = player.sprites.run.right;
-      player.currentCropWidth = player.sprites.run.cropWidth;
-      player.width = player.sprites.run.width;
-    } else if (
-      keys.left.pressed &&
-      lastKey === "left" &&
-      player.currentSprite !== player.sprites.run.left
-    ) {
-      player.currentSprite = player.sprites.run.left;
-      player.currentCropWidth = player.sprites.run.cropWidth;
-      player.width = player.sprites.run.width;
-    } else if (
-      !keys.left.pressed &&
-      lastKey === "left" &&
-      player.currentSprite !== player.sprites.stand.left
-    ) {
-      player.currentSprite = player.sprites.stand.left;
-      player.currentCropWidth = player.sprites.stand.cropWidth;
-      player.width = player.sprites.stand.width;
-    } else if (
-      !keys.right.pressed &&
-      lastKey === "right" &&
-      player.currentSprite !== player.sprites.stand.right
-    ) {
-      player.currentSprite = player.sprites.stand.right;
-      player.currentCropWidth = player.sprites.stand.cropWidth;
-      player.width = player.sprites.stand.width;
-    }
-  }
+    flowers.forEach((flower) => {
+      if (isOnTopOfPlatform({ object: flower, platform })) {
+        flower.velocity.y = 0;
+      }
+    });
+  });
 
   const lastPlatformX = images.platform.width * 2 - 3 * 2 + 300;
   if (scrollOffset > lastPlatformX - canvas.width / 2 + 200) {
@@ -258,6 +297,53 @@ function animate() {
   if (player.position.y > canvas.height) {
     console.log("You lose");
     init();
+  }
+
+  if (player.velocity.y !== 0) return;
+
+  // sprite switching
+  let spriteRunRight;
+  let spriteRunLeft;
+  let spriteStandRight;
+  let spriteStandLeft;
+
+  if (player.powerUps.fireFlower) {
+    spriteRunRight = player.sprites.run.fireFlower.right;
+    spriteRunLeft = player.sprites.run.fireFlower.left;
+    spriteStandRight = player.sprites.stand.fireFlower.right;
+    spriteStandLeft = player.sprites.stand.fireFlower.left;
+  } else {
+    spriteRunRight = player.sprites.run.right;
+    spriteRunLeft = player.sprites.run.left;
+    spriteStandRight = player.sprites.stand.right;
+    spriteStandLeft = player.sprites.stand.left;
+  }
+
+  if (
+    keys.right.pressed &&
+    lastKey === "right" &&
+    player.currentSprite !== spriteRunRight
+  ) {
+    player.frames = 1;
+    player.currentSprite = spriteRunRight;
+  } else if (
+    keys.left.pressed &&
+    lastKey === "left" &&
+    player.currentSprite !== spriteRunLeft
+  ) {
+    player.currentSprite = spriteRunLeft;
+  } else if (
+    !keys.left.pressed &&
+    lastKey === "left" &&
+    player.currentSprite !== spriteStandLeft
+  ) {
+    player.currentSprite = spriteStandLeft;
+  } else if (
+    !keys.right.pressed &&
+    lastKey === "right" &&
+    player.currentSprite !== spriteStandRight
+  ) {
+    player.currentSprite = spriteStandRight;
   }
 }
 window.onload = () => {
@@ -283,13 +369,46 @@ addEventListener("keydown", ({ code }) => {
       if (player.velocity.y === 0) {
         player.velocity.y = -player.jumpVelocity;
       }
-      
-      if (lastKey === 'right') {
-        player.currentSprite = player.sprites.jump.right;
+
+      let spriteJumpRight;
+      let spriteJumpLeft;
+
+      if (player.powerUps.fireFlower) {
+        spriteJumpRight = player.sprites.jump.fireFlower.right;
+        spriteJumpLeft = player.sprites.jump.fireFlower.left;
       } else {
-        player.currentSprite = player.sprites.jump.left;
+        spriteJumpRight = player.sprites.jump.right;
+        spriteJumpLeft = player.sprites.jump.left;
       }
-      
+
+      if (lastKey === "right") {
+        player.currentSprite = spriteJumpRight;
+      } else {
+        player.currentSprite = spriteJumpLeft;
+      }
+
+      break;
+    case "KeyF":
+      if (!player.powerUps.fireFlower) return;
+
+      let velocity = 15;
+
+      if (lastKey === "left") velocity = -velocity;
+      particles.push(
+        new Particle({
+          position: {
+            x: player.position.x + player.width / 2,
+            y: player.position.y + player.height / 2,
+          },
+          velocity: {
+            x: velocity,
+            y: 0,
+          },
+          radius: 5,
+          color: "red",
+          fireball: true
+        })
+      );
       break;
     default:
   }

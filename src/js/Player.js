@@ -18,33 +18,46 @@ class Player {
     this.height = this.frameHeight * this.scale;
     this.jumpVelocity = 30;
     this.speed = 10;
+    this.powerUps = {
+      fireFlower: false
+    }
     this.image = images.spriteMarioStandRight;
     this.frames = 0;
     this.sprites = {
       stand: {
         right: images.spriteMarioStandRight,
         left: images.spriteMarioStandLeft,
-        cropWidth: this.frameWidth,
-        width: this.width
+        fireFlower: {
+          right: images.spriteFireFlowerStandRight,
+          left: images.spriteFireFlowerStandLeft,
+        }
       },
       run: {
         right: images.spriteMarioRunRight,
         left: images.spriteMarioRunLeft,
-        cropWidth: this.frameWidth,
-        width: this.width
+        fireFlower: {
+          right: images.spriteFireFlowerRunRight,
+          left: images.spriteFireFlowerRunLeft,
+        }
       },
       jump: {
         right: images.spriteMarioJumpRight,
         left: images.spriteMarioJumpLeft,
-        cropWidth: this.frameWidth,
-        width: this.width
+        fireFlower: {
+          right: images.spriteFireFlowerJumpRight,
+          left: images.spriteFireFlowerJumpLeft,
+        }
       }
     }
     this.currentSprite = this.sprites.stand.right;
-    this.currentCropWidth = this.sprites.stand.cropWidth;
+    this.currentCropWidth = this.frameWidth;
+    this.invincible = false;
+    this.opacity = 1;
   }
 
   draw({ c }) {
+    c.save();
+    c.globalAlpha = this.opacity;
     c.drawImage(
       this.currentSprite,
       this.currentCropWidth * this.frames,
@@ -56,26 +69,32 @@ class Player {
       this.width,
       this.height
     );
+    c.restore();
   }
 
   update({ c }) {
     this.frames++;
 
     if (
-      //this.frames > 58 && 
       (this.currentSprite === this.sprites.stand.right ||
-      this.currentSprite === this.sprites.stand.left)
+      this.currentSprite === this.sprites.stand.left ||
+      this.currentSprite === this.sprites.stand.fireFlower.right ||
+      this.currentSprite === this.sprites.stand.fireFlower.left)
     ) {
       this.frames = 0;
     } else if (
       this.frames > 28 && 
       (this.currentSprite === this.sprites.run.right ||
-      this.currentSprite === this.sprites.run.left)
+      this.currentSprite === this.sprites.run.left ||
+      this.currentSprite === this.sprites.run.fireFlower.right ||
+      this.currentSprite === this.sprites.run.fireFlower.left)
     ) {
       this.frames = 0;
     } else if (
       this.currentSprite === this.sprites.jump.right ||
-      this.currentSprite === this.sprites.jump.left
+      this.currentSprite === this.sprites.jump.left ||
+      this.currentSprite === this.sprites.jump.fireFlower.right ||
+      this.currentSprite === this.sprites.jump.fireFlower.left
     ) {
       this.frames = 0;
     }
@@ -86,6 +105,16 @@ class Player {
     // gravity
     if (this.isAboveTheBottom()) {
       this.velocity.y += gravity;
+    }
+
+    if (this.invincible) {
+      if (this.opacity === 1) {
+        this.opacity = 0;
+      } else {
+        this.opacity = 1;
+      }
+    } else {
+      this.opacity = 1;
     }
   }
 

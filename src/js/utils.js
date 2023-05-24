@@ -1,3 +1,5 @@
+const { default: Particle } = require("./Particle");
+
 function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
@@ -68,6 +70,33 @@ function hitSideOfPlatform({ object, platform }) {
   )
 }
 
+function objectsTouch({ object1, object2 }) {
+  return (
+    object1.position.x + object1.width >= object2.position.x &&
+    object1.position.x <= object2.position.x + object2.width &&
+    object1.position.y + object1.height >= object2.position.y &&
+    object1.position.y <= object2.position.y + object2.height
+  )
+}
+
+function generateExplosion({ particles, object }) {
+  for (let i = 0; i < 50; i++) {
+    particles.push(
+      new Particle({
+        position: {
+          x: object.position.x + object.width / 2,
+          y: object.position.y + object.height / 2,
+        },
+        velocity: {
+          x: (Math.random() - 0.5) * 10,
+          y: (Math.random() - 0.5) * 7,
+        },
+        radius: Math.random() * 3,
+      })
+    );
+  }
+}
+
 module.exports = {
   randomIntFromRange,
   randomColor,
@@ -78,4 +107,6 @@ module.exports = {
   collisitionTop,
   hitBottomOfPlatform,
   hitSideOfPlatform,
+  objectsTouch,
+  generateExplosion,
 };

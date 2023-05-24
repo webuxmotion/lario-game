@@ -1,53 +1,50 @@
 import { gravity } from "./canvas";
+import images from "./images";
 
-class Particle {
-  constructor({
-    position,
-    velocity,
-    radius,
-    fireball,
-    color = "#654428",
-  }) {
+class Flower {
+  constructor({ position, velocity }) {
     this.position = {
       x: position.x,
       y: position.y,
-    };
+    }
     this.velocity = {
       x: velocity.x,
       y: velocity.y,
     }
-    this.radius = radius;
-    this.ttl = 300;
-    this.color = color;
-    this.fireball = fireball;
+
+    this.width = 43;
+    this.height = 50;
+    this.image = images.flower;
+    this.frames = 0;
   }
 
   draw({ c }) {
-    c.beginPath();
-    c.arc(
+    c.drawImage(
+      this.image,
+      56 * this.frames,
+      0,
+      56,
+      60,
       this.position.x,
       this.position.y,
-      this.radius,
-      0,
-      Math.PI * 2,
-      false
+      this.width,
+      this.height
     );
-    c.fillStyle = this.color;
-    c.fill();
-    c.closePath();
   }
 
   update({ c }) {
+    this.frames++;
+    if (this.frames >= 75) {
+      this.frames = 0;
+    }
     this.draw({ c });
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
     // gravity
     if (this.isAboveTheBottom()) {
-      this.velocity.y += gravity * 0.1;
+      this.velocity.y += gravity;
     }
-
-    this.ttl--;
   }
 
   isAboveTheBottom() {
@@ -55,8 +52,8 @@ class Particle {
   }
 
   getBaseY() {
-    return this.position.y + this.radius + this.velocity.y;
+    return this.position.y + this.height + this.velocity.y;
   }
 }
 
-export default Particle;
+export default Flower;

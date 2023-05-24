@@ -164,6 +164,97 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/img/spriteFireFlower.png":
+/*!**************************************!*\
+  !*** ./src/img/spriteFireFlower.png ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "434554c25d0262d9ae16c700febfa462.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerJumpLeft.png":
+/*!**********************************************!*\
+  !*** ./src/img/spriteFireFlowerJumpLeft.png ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "fe7f83abbc33795c55d5bbab3ab117f3.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerJumpRight.png":
+/*!***********************************************!*\
+  !*** ./src/img/spriteFireFlowerJumpRight.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "b5b7bdebff9886acfe07b077e9357d84.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerRunLeft.png":
+/*!*********************************************!*\
+  !*** ./src/img/spriteFireFlowerRunLeft.png ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "dac857eaeda937793a54db5301b14e46.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerRunRight.png":
+/*!**********************************************!*\
+  !*** ./src/img/spriteFireFlowerRunRight.png ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "c957f14ac99dfa4f90a424a042a43e7b.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerStandLeft.png":
+/*!***********************************************!*\
+  !*** ./src/img/spriteFireFlowerStandLeft.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "0d2de9eb02bbc291f7d436447db7fe30.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerStandRight.png":
+/*!************************************************!*\
+  !*** ./src/img/spriteFireFlowerStandRight.png ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "6b3fe854152c472eecf59c9dbe571eba.png");
+
+/***/ }),
+
 /***/ "./src/img/spriteGoomba.png":
 /*!**********************************!*\
   !*** ./src/img/spriteGoomba.png ***!
@@ -331,6 +422,92 @@ Block.sizes = {
   height: 79
 };
 /* harmony default export */ __webpack_exports__["default"] = (Block);
+
+/***/ }),
+
+/***/ "./src/js/Flower.js":
+/*!**************************!*\
+  !*** ./src/js/Flower.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _canvas__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./canvas */ "./src/js/canvas.js");
+/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+
+var Flower = /*#__PURE__*/function () {
+  function Flower(_ref) {
+    var position = _ref.position,
+        velocity = _ref.velocity;
+
+    _classCallCheck(this, Flower);
+
+    this.position = {
+      x: position.x,
+      y: position.y
+    };
+    this.velocity = {
+      x: velocity.x,
+      y: velocity.y
+    };
+    this.width = 43;
+    this.height = 50;
+    this.image = _images__WEBPACK_IMPORTED_MODULE_1__["default"].flower;
+    this.frames = 0;
+  }
+
+  _createClass(Flower, [{
+    key: "draw",
+    value: function draw(_ref2) {
+      var c = _ref2.c;
+      c.drawImage(this.image, 56 * this.frames, 0, 56, 60, this.position.x, this.position.y, this.width, this.height);
+    }
+  }, {
+    key: "update",
+    value: function update(_ref3) {
+      var c = _ref3.c;
+      this.frames++;
+
+      if (this.frames >= 75) {
+        this.frames = 0;
+      }
+
+      this.draw({
+        c: c
+      });
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y; // gravity
+
+      if (this.isAboveTheBottom()) {
+        this.velocity.y += _canvas__WEBPACK_IMPORTED_MODULE_0__["gravity"];
+      }
+    }
+  }, {
+    key: "isAboveTheBottom",
+    value: function isAboveTheBottom() {
+      return this.getBaseY() <= canvas.height;
+    }
+  }, {
+    key: "getBaseY",
+    value: function getBaseY() {
+      return this.position.y + this.height + this.velocity.y;
+    }
+  }]);
+
+  return Flower;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Flower);
 
 /***/ }),
 
@@ -522,7 +699,10 @@ var Particle = /*#__PURE__*/function () {
   function Particle(_ref) {
     var position = _ref.position,
         velocity = _ref.velocity,
-        radius = _ref.radius;
+        radius = _ref.radius,
+        fireball = _ref.fireball,
+        _ref$color = _ref.color,
+        color = _ref$color === void 0 ? "#654428" : _ref$color;
 
     _classCallCheck(this, Particle);
 
@@ -536,6 +716,8 @@ var Particle = /*#__PURE__*/function () {
     };
     this.radius = radius;
     this.ttl = 300;
+    this.color = color;
+    this.fireball = fireball;
   }
 
   _createClass(Particle, [{
@@ -544,7 +726,7 @@ var Particle = /*#__PURE__*/function () {
       var c = _ref2.c;
       c.beginPath();
       c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
-      c.fillStyle = "#654428";
+      c.fillStyle = this.color;
       c.fill();
       c.closePath();
     }
@@ -622,37 +804,51 @@ var Player = /*#__PURE__*/function () {
     this.height = this.frameHeight * this.scale;
     this.jumpVelocity = 30;
     this.speed = 10;
+    this.powerUps = {
+      fireFlower: false
+    };
     this.image = _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioStandRight;
     this.frames = 0;
     this.sprites = {
       stand: {
         right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioStandRight,
         left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioStandLeft,
-        cropWidth: this.frameWidth,
-        width: this.width
+        fireFlower: {
+          right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerStandRight,
+          left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerStandLeft
+        }
       },
       run: {
         right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioRunRight,
         left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioRunLeft,
-        cropWidth: this.frameWidth,
-        width: this.width
+        fireFlower: {
+          right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerRunRight,
+          left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerRunLeft
+        }
       },
       jump: {
         right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioJumpRight,
         left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteMarioJumpLeft,
-        cropWidth: this.frameWidth,
-        width: this.width
+        fireFlower: {
+          right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerJumpRight,
+          left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerJumpLeft
+        }
       }
     };
     this.currentSprite = this.sprites.stand.right;
-    this.currentCropWidth = this.sprites.stand.cropWidth;
+    this.currentCropWidth = this.frameWidth;
+    this.invincible = false;
+    this.opacity = 1;
   }
 
   _createClass(Player, [{
     key: "draw",
     value: function draw(_ref) {
       var c = _ref.c;
+      c.save();
+      c.globalAlpha = this.opacity;
       c.drawImage(this.currentSprite, this.currentCropWidth * this.frames, 0, this.currentCropWidth, this.frameHeight, this.position.x, this.position.y, this.width, this.height);
+      c.restore();
     }
   }, {
     key: "update",
@@ -660,12 +856,11 @@ var Player = /*#__PURE__*/function () {
       var c = _ref2.c;
       this.frames++;
 
-      if ( //this.frames > 58 && 
-      this.currentSprite === this.sprites.stand.right || this.currentSprite === this.sprites.stand.left) {
+      if (this.currentSprite === this.sprites.stand.right || this.currentSprite === this.sprites.stand.left || this.currentSprite === this.sprites.stand.fireFlower.right || this.currentSprite === this.sprites.stand.fireFlower.left) {
         this.frames = 0;
-      } else if (this.frames > 28 && (this.currentSprite === this.sprites.run.right || this.currentSprite === this.sprites.run.left)) {
+      } else if (this.frames > 28 && (this.currentSprite === this.sprites.run.right || this.currentSprite === this.sprites.run.left || this.currentSprite === this.sprites.run.fireFlower.right || this.currentSprite === this.sprites.run.fireFlower.left)) {
         this.frames = 0;
-      } else if (this.currentSprite === this.sprites.jump.right || this.currentSprite === this.sprites.jump.left) {
+      } else if (this.currentSprite === this.sprites.jump.right || this.currentSprite === this.sprites.jump.left || this.currentSprite === this.sprites.jump.fireFlower.right || this.currentSprite === this.sprites.jump.fireFlower.left) {
         this.frames = 0;
       }
 
@@ -677,6 +872,16 @@ var Player = /*#__PURE__*/function () {
 
       if (this.isAboveTheBottom()) {
         this.velocity.y += _canvas__WEBPACK_IMPORTED_MODULE_0__["gravity"];
+      }
+
+      if (this.invincible) {
+        if (this.opacity === 1) {
+          this.opacity = 0;
+        } else {
+          this.opacity = 1;
+        }
+      } else {
+        this.opacity = 1;
       }
     }
   }, {
@@ -716,6 +921,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Particle__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Particle */ "./src/js/Particle.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./utils */ "./src/js/utils.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_utils__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _getFlowers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./getFlowers */ "./src/js/getFlowers.js");
+
 
 
 
@@ -737,6 +944,7 @@ var background2;
 var hills;
 var genericObjects = [background, background2, hills];
 var goombas = [];
+var flowers = [];
 var particles = [];
 var scrollOffset = 0;
 var keys = {
@@ -753,6 +961,7 @@ function init() {
   goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_0__["default"])();
   particles = [];
   platforms = Object(_getPlatforms__WEBPACK_IMPORTED_MODULE_4__["default"])();
+  flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["default"])();
   background = new _GenericObject__WEBPACK_IMPORTED_MODULE_1__["default"]({
     x: -1,
     y: -1,
@@ -782,6 +991,21 @@ function animate() {
     });
     object.velocity.x = 0;
   });
+  flowers.forEach(function (flower, index) {
+    if (Object(_utils__WEBPACK_IMPORTED_MODULE_6__["objectsTouch"])({
+      object1: player,
+      object2: flower
+    })) {
+      player.powerUps.fireFlower = true;
+      setTimeout(function () {
+        flowers.splice(index, 1);
+      }, 0);
+    } else {
+      flower.update({
+        c: c
+      });
+    }
+  });
   platforms.forEach(function (platform) {
     platform.update({
       c: c
@@ -791,6 +1015,21 @@ function animate() {
   goombas.forEach(function (goomba, index) {
     goomba.update({
       c: c
+    }); // remove goomba on fireball hit
+
+    particles.filter(function (particle) {
+      return particle.fireball;
+    }).forEach(function (particle, particleIndex) {
+      if (particle.position.x + particle.radius >= goomba.position.x && particle.position.x - particle.radius <= goomba.position.x + goomba.width && particle.position.y + particle.radius >= goomba.position.y && particle.position.y - particle.radius <= goomba.position.y + goomba.height) {
+        Object(_utils__WEBPACK_IMPORTED_MODULE_6__["generateExplosion"])({
+          particles: particles,
+          object: goomba
+        });
+        setTimeout(function () {
+          goombas.splice(index, 1);
+          particles.splice(particleIndex, 1);
+        }, 0);
+      }
     });
 
     if (Object(_utils__WEBPACK_IMPORTED_MODULE_6__["collisitionTop"])({
@@ -799,30 +1038,37 @@ function animate() {
     })) {
       player.velocity.y = -20;
       setTimeout(function () {
-        for (var i = 0; i < 50; i++) {
-          particles.push(new _Particle__WEBPACK_IMPORTED_MODULE_5__["default"]({
-            position: {
-              x: goomba.position.x + goomba.width / 2,
-              y: goomba.position.y + goomba.height / 2
-            },
-            velocity: {
-              x: (Math.random() - 0.5) * 10,
-              y: (Math.random() - 0.5) * 7
-            },
-            radius: Math.random() * 3
-          }));
-        }
-
+        Object(_utils__WEBPACK_IMPORTED_MODULE_6__["generateExplosion"])({
+          particles: particles,
+          object: goomba
+        });
         goombas.splice(index, 1);
       }, 0);
     } else if (player.position.x + player.width >= goomba.position.x && player.position.y + player.height >= goomba.position.y && player.position.x <= goomba.position.x + goomba.width && player.position.y <= goomba.position.y + goomba.height) {
-      init();
+      // player hits goomba
+      if (player.powerUps.fireFlower) {
+        player.invincible = true;
+        player.powerUps.fireFlower = false;
+        setTimeout(function () {
+          player.invincible = false;
+        }, 1000);
+      }
+
+      if (!player.invincible) {
+        init();
+      }
     }
   });
-  particles.forEach(function (particle) {
-    return particle.update({
+  particles.forEach(function (particle, index) {
+    particle.update({
       c: c
     });
+
+    if (particle.fireball && (particle.position.x + particle.radius >= canvas.width || particle.position.x - particle.radius <= 0)) {
+      setTimeout(function () {
+        particles.splice(index, 1);
+      }, 0);
+    }
   });
   player.update({
     c: c
@@ -861,6 +1107,9 @@ function animate() {
         goombas.forEach(function (goomba) {
           goomba.position.x -= player.speed;
         });
+        flowers.forEach(function (flower) {
+          flower.position.x -= player.speed;
+        });
         particles.forEach(function (particle) {
           particle.position.x -= player.speed;
         });
@@ -889,6 +1138,9 @@ function animate() {
         });
         goombas.forEach(function (goomba) {
           goomba.position.x += player.speed;
+        });
+        flowers.forEach(function (flower) {
+          flower.position.x += player.speed;
         });
         particles.forEach(function (particle) {
           particle.position.x += player.speed;
@@ -944,29 +1196,15 @@ function animate() {
         goomba.velocity.y = 0;
       }
     });
+    flowers.forEach(function (flower) {
+      if (Object(_utils__WEBPACK_IMPORTED_MODULE_6__["isOnTopOfPlatform"])({
+        object: flower,
+        platform: platform
+      })) {
+        flower.velocity.y = 0;
+      }
+    });
   });
-
-  if (player.velocity.y === 0) {
-    if (keys.right.pressed && lastKey === "right" && player.currentSprite !== player.sprites.run.right) {
-      player.frames = 1;
-      player.currentSprite = player.sprites.run.right;
-      player.currentCropWidth = player.sprites.run.cropWidth;
-      player.width = player.sprites.run.width;
-    } else if (keys.left.pressed && lastKey === "left" && player.currentSprite !== player.sprites.run.left) {
-      player.currentSprite = player.sprites.run.left;
-      player.currentCropWidth = player.sprites.run.cropWidth;
-      player.width = player.sprites.run.width;
-    } else if (!keys.left.pressed && lastKey === "left" && player.currentSprite !== player.sprites.stand.left) {
-      player.currentSprite = player.sprites.stand.left;
-      player.currentCropWidth = player.sprites.stand.cropWidth;
-      player.width = player.sprites.stand.width;
-    } else if (!keys.right.pressed && lastKey === "right" && player.currentSprite !== player.sprites.stand.right) {
-      player.currentSprite = player.sprites.stand.right;
-      player.currentCropWidth = player.sprites.stand.cropWidth;
-      player.width = player.sprites.stand.width;
-    }
-  }
-
   var lastPlatformX = _images__WEBPACK_IMPORTED_MODULE_3__["default"].platform.width * 2 - 3 * 2 + 300;
 
   if (scrollOffset > lastPlatformX - canvas.width / 2 + 200) {
@@ -976,6 +1214,36 @@ function animate() {
   if (player.position.y > canvas.height) {
     console.log("You lose");
     init();
+  }
+
+  if (player.velocity.y !== 0) return; // sprite switching
+
+  var spriteRunRight;
+  var spriteRunLeft;
+  var spriteStandRight;
+  var spriteStandLeft;
+
+  if (player.powerUps.fireFlower) {
+    spriteRunRight = player.sprites.run.fireFlower.right;
+    spriteRunLeft = player.sprites.run.fireFlower.left;
+    spriteStandRight = player.sprites.stand.fireFlower.right;
+    spriteStandLeft = player.sprites.stand.fireFlower.left;
+  } else {
+    spriteRunRight = player.sprites.run.right;
+    spriteRunLeft = player.sprites.run.left;
+    spriteStandRight = player.sprites.stand.right;
+    spriteStandLeft = player.sprites.stand.left;
+  }
+
+  if (keys.right.pressed && lastKey === "right" && player.currentSprite !== spriteRunRight) {
+    player.frames = 1;
+    player.currentSprite = spriteRunRight;
+  } else if (keys.left.pressed && lastKey === "left" && player.currentSprite !== spriteRunLeft) {
+    player.currentSprite = spriteRunLeft;
+  } else if (!keys.left.pressed && lastKey === "left" && player.currentSprite !== spriteStandLeft) {
+    player.currentSprite = spriteStandLeft;
+  } else if (!keys.right.pressed && lastKey === "right" && player.currentSprite !== spriteStandRight) {
+    player.currentSprite = spriteStandRight;
   }
 }
 
@@ -1007,12 +1275,42 @@ addEventListener("keydown", function (_ref) {
         player.velocity.y = -player.jumpVelocity;
       }
 
-      if (lastKey === 'right') {
-        player.currentSprite = player.sprites.jump.right;
+      var spriteJumpRight;
+      var spriteJumpLeft;
+
+      if (player.powerUps.fireFlower) {
+        spriteJumpRight = player.sprites.jump.fireFlower.right;
+        spriteJumpLeft = player.sprites.jump.fireFlower.left;
       } else {
-        player.currentSprite = player.sprites.jump.left;
+        spriteJumpRight = player.sprites.jump.right;
+        spriteJumpLeft = player.sprites.jump.left;
       }
 
+      if (lastKey === "right") {
+        player.currentSprite = spriteJumpRight;
+      } else {
+        player.currentSprite = spriteJumpLeft;
+      }
+
+      break;
+
+    case "KeyF":
+      if (!player.powerUps.fireFlower) return;
+      var velocity = 15;
+      if (lastKey === "left") velocity = -velocity;
+      particles.push(new _Particle__WEBPACK_IMPORTED_MODULE_5__["default"]({
+        position: {
+          x: player.position.x + player.width / 2,
+          y: player.position.y + player.height / 2
+        },
+        velocity: {
+          x: velocity,
+          y: 0
+        },
+        radius: 5,
+        color: "red",
+        fireball: true
+      }));
       break;
 
     default:
@@ -1040,6 +1338,35 @@ addEventListener("keyup", function (_ref2) {
     default:
   }
 });
+
+/***/ }),
+
+/***/ "./src/js/getFlowers.js":
+/*!******************************!*\
+  !*** ./src/js/getFlowers.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Flower__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Flower */ "./src/js/Flower.js");
+
+
+var getFlowers = function getFlowers() {
+  return [new _Flower__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 400,
+      y: 100
+    },
+    velocity: {
+      x: 0,
+      y: 0
+    }
+  })];
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (getFlowers);
 
 /***/ }),
 
@@ -1181,10 +1508,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_spriteMarioStandRight_png__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../img/spriteMarioStandRight.png */ "./src/img/spriteMarioStandRight.png");
 /* harmony import */ var _img_spriteMarioJumpLeft_png__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../img/spriteMarioJumpLeft.png */ "./src/img/spriteMarioJumpLeft.png");
 /* harmony import */ var _img_spriteMarioJumpRight_png__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../img/spriteMarioJumpRight.png */ "./src/img/spriteMarioJumpRight.png");
-/* harmony import */ var _img_blocks_png__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../img/blocks.png */ "./src/img/blocks.png");
-/* harmony import */ var _img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../img/spriteGoomba.png */ "./src/img/spriteGoomba.png");
-/* harmony import */ var _img_block_png__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../img/block.png */ "./src/img/block.png");
-/* harmony import */ var _img_blockTri_png__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../img/blockTri.png */ "./src/img/blockTri.png");
+/* harmony import */ var _img_spriteFireFlowerRunRight_png__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../img/spriteFireFlowerRunRight.png */ "./src/img/spriteFireFlowerRunRight.png");
+/* harmony import */ var _img_spriteFireFlowerRunLeft_png__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../img/spriteFireFlowerRunLeft.png */ "./src/img/spriteFireFlowerRunLeft.png");
+/* harmony import */ var _img_spriteFireFlowerStandRight_png__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../img/spriteFireFlowerStandRight.png */ "./src/img/spriteFireFlowerStandRight.png");
+/* harmony import */ var _img_spriteFireFlowerStandLeft_png__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../img/spriteFireFlowerStandLeft.png */ "./src/img/spriteFireFlowerStandLeft.png");
+/* harmony import */ var _img_spriteFireFlowerJumpRight_png__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../img/spriteFireFlowerJumpRight.png */ "./src/img/spriteFireFlowerJumpRight.png");
+/* harmony import */ var _img_spriteFireFlowerJumpLeft_png__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../img/spriteFireFlowerJumpLeft.png */ "./src/img/spriteFireFlowerJumpLeft.png");
+/* harmony import */ var _img_blocks_png__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../img/blocks.png */ "./src/img/blocks.png");
+/* harmony import */ var _img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../img/spriteGoomba.png */ "./src/img/spriteGoomba.png");
+/* harmony import */ var _img_block_png__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../img/block.png */ "./src/img/block.png");
+/* harmony import */ var _img_blockTri_png__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../img/blockTri.png */ "./src/img/blockTri.png");
+/* harmony import */ var _img_spriteFireFlower_png__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../img/spriteFireFlower.png */ "./src/img/spriteFireFlower.png");
+
+
+
+
+
+
+
 
 
 
@@ -1209,10 +1550,17 @@ __webpack_require__.r(__webpack_exports__);
   spriteMarioStandRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteMarioStandRight_png__WEBPACK_IMPORTED_MODULE_7__["default"]),
   spriteMarioJumpLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteMarioJumpLeft_png__WEBPACK_IMPORTED_MODULE_8__["default"]),
   spriteMarioJumpRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteMarioJumpRight_png__WEBPACK_IMPORTED_MODULE_9__["default"]),
-  blocks: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blocks_png__WEBPACK_IMPORTED_MODULE_10__["default"]),
-  goomba: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_11__["default"]),
-  block: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_block_png__WEBPACK_IMPORTED_MODULE_12__["default"]),
-  blockTri: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blockTri_png__WEBPACK_IMPORTED_MODULE_13__["default"])
+  spriteFireFlowerRunLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerRunLeft_png__WEBPACK_IMPORTED_MODULE_11__["default"]),
+  spriteFireFlowerRunRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerRunRight_png__WEBPACK_IMPORTED_MODULE_10__["default"]),
+  spriteFireFlowerStandLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerStandLeft_png__WEBPACK_IMPORTED_MODULE_13__["default"]),
+  spriteFireFlowerStandRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerStandRight_png__WEBPACK_IMPORTED_MODULE_12__["default"]),
+  spriteFireFlowerJumpLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerJumpLeft_png__WEBPACK_IMPORTED_MODULE_15__["default"]),
+  spriteFireFlowerJumpRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerJumpRight_png__WEBPACK_IMPORTED_MODULE_14__["default"]),
+  blocks: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blocks_png__WEBPACK_IMPORTED_MODULE_16__["default"]),
+  goomba: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_17__["default"]),
+  block: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_block_png__WEBPACK_IMPORTED_MODULE_18__["default"]),
+  blockTri: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blockTri_png__WEBPACK_IMPORTED_MODULE_19__["default"]),
+  flower: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlower_png__WEBPACK_IMPORTED_MODULE_20__["default"])
 });
 
 /***/ }),
@@ -1222,7 +1570,10 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./src/js/utils.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
+
+var _require = __webpack_require__(/*! ./Particle */ "./src/js/Particle.js"),
+    Particle = _require["default"];
 
 function randomIntFromRange(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -1274,6 +1625,31 @@ function hitSideOfPlatform(_ref5) {
   return object.position.x + object.width - object.velocity.x - platform.velocity.x >= platform.position.x && object.position.x + object.velocity.x <= platform.position.x + platform.width && object.position.y <= platform.position.y + platform.height && object.position.y + object.height >= platform.position.y;
 }
 
+function objectsTouch(_ref6) {
+  var object1 = _ref6.object1,
+      object2 = _ref6.object2;
+  return object1.position.x + object1.width >= object2.position.x && object1.position.x <= object2.position.x + object2.width && object1.position.y + object1.height >= object2.position.y && object1.position.y <= object2.position.y + object2.height;
+}
+
+function generateExplosion(_ref7) {
+  var particles = _ref7.particles,
+      object = _ref7.object;
+
+  for (var i = 0; i < 50; i++) {
+    particles.push(new Particle({
+      position: {
+        x: object.position.x + object.width / 2,
+        y: object.position.y + object.height / 2
+      },
+      velocity: {
+        x: (Math.random() - 0.5) * 10,
+        y: (Math.random() - 0.5) * 7
+      },
+      radius: Math.random() * 3
+    }));
+  }
+}
+
 module.exports = {
   randomIntFromRange: randomIntFromRange,
   randomColor: randomColor,
@@ -1283,7 +1659,9 @@ module.exports = {
   isCircleOnTopOfPlatform: isCircleOnTopOfPlatform,
   collisitionTop: collisitionTop,
   hitBottomOfPlatform: hitBottomOfPlatform,
-  hitSideOfPlatform: hitSideOfPlatform
+  hitSideOfPlatform: hitSideOfPlatform,
+  objectsTouch: objectsTouch,
+  generateExplosion: generateExplosion
 };
 
 /***/ })
