@@ -9802,6 +9802,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/img/level2/mdPlatform.png":
+/*!***************************************!*\
+  !*** ./src/img/level2/mdPlatform.png ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "0b8962397444c8d035482f8d250cf428.png");
+
+/***/ }),
+
 /***/ "./src/img/level2/mountains.png":
 /*!**************************************!*\
   !*** ./src/img/level2/mountains.png ***!
@@ -10579,7 +10592,7 @@ __webpack_require__.r(__webpack_exports__);
 var audio = {
   musicLevel1: new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
     src: [_audio_audioMusicLevel1_mp3__WEBPACK_IMPORTED_MODULE_10__["default"]],
-    volume: 0.1,
+    volume: 0.03,
     loop: true,
     autoplay: false
   }),
@@ -10619,7 +10632,7 @@ var audio = {
     src: [_audio_audioLosePowerUp_mp3__WEBPACK_IMPORTED_MODULE_9__["default"]],
     volume: 0.1
   }),
-  winLevel: new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
+  obtainPowerUp: new howler__WEBPACK_IMPORTED_MODULE_0__["Howl"]({
     src: [_audio_audioWinLevel_mp3__WEBPACK_IMPORTED_MODULE_11__["default"]],
     volume: 0.1
   }),
@@ -10684,6 +10697,8 @@ var game;
 var currentLevel = 1;
 
 function selectLevel(currentLevel) {
+  if (!_audio__WEBPACK_IMPORTED_MODULE_1__["audio"].musicLevel1.playing()) _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].musicLevel1.play();
+
   switch (currentLevel) {
     case 1:
       init();
@@ -10711,7 +10726,7 @@ function init() {
   };
   goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_2__["getGoombas1"])();
   particles = [];
-  flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["getFlowers1"])();
   genericObjects = Object(_getGenericObjects__WEBPACK_IMPORTED_MODULE_10__["getGenericObjects1"])();
   scrollOffset = 0;
   lastKey = "right";
@@ -10741,7 +10756,7 @@ function initLevel2() {
   };
   goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_2__["getGoombas2"])();
   particles = [];
-  flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["getFlowers2"])();
   genericObjects = Object(_getGenericObjects__WEBPACK_IMPORTED_MODULE_10__["getGenericObjects2"])();
   scrollOffset = 0;
   lastKey = "right";
@@ -10749,8 +10764,8 @@ function initLevel2() {
     canvas: canvas
   });
   flagPole = new _GenericObject__WEBPACK_IMPORTED_MODULE_3__["default"]({
-    x: 7650,
-    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].flagPole.height,
+    x: 7780,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].flagPole.height,
     image: _images__WEBPACK_IMPORTED_MODULE_5__["default"].flagPole
   });
 }
@@ -10810,7 +10825,7 @@ function animate() {
       _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].descend.play();
     }, 200);
     gsap__WEBPACK_IMPORTED_MODULE_0__["default"].to(player.position, {
-      y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].lgPlatform.height - player.height,
+      y: flagPole.position.y + flagPole.height - player.height,
       duration: 1,
       onComplete: function onComplete() {
         player.currentSprite = _spriteRunRight;
@@ -10851,9 +10866,9 @@ function animate() {
 
     setTimeout(function () {
       gravity = 1.4;
-      selectLevel(currentLevel + 1);
-      currentLevel += 1;
-    }, 5000);
+      currentLevel++;
+      selectLevel(currentLevel);
+    }, 8000);
   } // mario obtains powerup
 
 
@@ -10862,6 +10877,7 @@ function animate() {
       object1: player,
       object2: flower
     })) {
+      _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].obtainPowerUp.play();
       player.powerUps.fireFlower = true;
       setTimeout(function () {
         flowers.splice(index, 1);
@@ -10883,10 +10899,8 @@ function animate() {
       c: c
     }); // remove goomba on fireball hit
 
-    particles.filter(function (particle) {
-      return particle.fireball;
-    }).forEach(function (particle, particleIndex) {
-      if (particle.position.x + particle.radius >= goomba.position.x && particle.position.x - particle.radius <= goomba.position.x + goomba.width && particle.position.y + particle.radius >= goomba.position.y && particle.position.y - particle.radius <= goomba.position.y + goomba.height) {
+    particles.forEach(function (particle, particleIndex) {
+      if (particle.fireball && particle.position.x + particle.radius >= goomba.position.x && particle.position.x - particle.radius <= goomba.position.x + goomba.width && particle.position.y + particle.radius >= goomba.position.y && particle.position.y - particle.radius <= goomba.position.y + goomba.height) {
         _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].fireworkBurst.play();
         Object(_utils__WEBPACK_IMPORTED_MODULE_6__["generateExplosion"])({
           particles: particles,
@@ -11208,15 +11222,17 @@ addEventListener("keyup", function (_ref2) {
 /*!******************************!*\
   !*** ./src/js/getFlowers.js ***!
   \******************************/
-/*! exports provided: default */
+/*! exports provided: getFlowers1, getFlowers2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFlowers1", function() { return getFlowers1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getFlowers2", function() { return getFlowers2; });
 /* harmony import */ var _Flower__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Flower */ "./src/js/Flower.js");
 
 
-var getFlowers = function getFlowers() {
+var getFlowers1 = function getFlowers1() {
   return [new _Flower__WEBPACK_IMPORTED_MODULE_0__["default"]({
     position: {
       x: 400,
@@ -11229,7 +11245,20 @@ var getFlowers = function getFlowers() {
   })];
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (getFlowers);
+var getFlowers2 = function getFlowers2() {
+  return [new _Flower__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 4734 - 28,
+      y: 100
+    },
+    velocity: {
+      x: 0,
+      y: 0
+    }
+  })];
+};
+
+
 
 /***/ }),
 
@@ -11407,94 +11436,57 @@ var getGoombas1 = function getGoombas1() {
 
 var getGoombas2 = function getGoombas2() {
   return [new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    // single block goomba
     position: {
-      x: 908 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth,
+      x: 903 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.width - goombaWidth,
       y: 100
     },
     velocity: {
-      x: -0.3,
+      x: -2,
       y: 0
     },
     distance: {
-      limit: 400,
+      limit: 700,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    // single block goomba
+    position: {
+      x: 1878 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width + 155 + 200 + 200 + 200 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].block.width / 2 - goombaWidth / 2,
+      y: 100
+    },
+    velocity: {
+      x: 0,
+      y: 0
+    },
+    distance: {
+      limit: 0,
       traveled: 0
     }
   }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
     position: {
-      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth,
+      x: 3831 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width - goombaWidth,
       y: 100
     },
     velocity: {
-      x: -0.3,
+      x: -1,
       y: 0
     },
     distance: {
-      limit: 400,
+      limit: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width - goombaWidth,
       traveled: 0
     }
   }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
     position: {
-      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth - goombaWidth,
+      x: 4734,
       y: 100
     },
     velocity: {
-      x: -0.3,
+      x: 1,
       y: 0
     },
     distance: {
-      limit: 400,
-      traveled: 0
-    }
-  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    position: {
-      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth - goombaWidth - goombaWidth,
-      y: 100
-    },
-    velocity: {
-      x: -0.3,
-      y: 0
-    },
-    distance: {
-      limit: 400,
-      traveled: 0
-    }
-  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    position: {
-      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth - goombaWidth - goombaWidth - goombaWidth,
-      y: 100
-    },
-    velocity: {
-      x: -0.3,
-      y: 0
-    },
-    distance: {
-      limit: 400,
-      traveled: 0
-    }
-  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    position: {
-      x: 5135 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform.width / 2 + goombaWidth,
-      y: 100
-    },
-    velocity: {
-      x: -0.3,
-      y: 0
-    },
-    distance: {
-      limit: 100,
-      traveled: 0
-    }
-  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
-    position: {
-      x: 6968,
-      y: 0
-    },
-    velocity: {
-      x: -0.3,
-      y: 0
-    },
-    distance: {
-      limit: 100,
+      limit: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width - goombaWidth,
       traveled: 0
     }
   })];
@@ -11627,19 +11619,83 @@ var getPlatforms1 = function getPlatforms1(_ref) {
 
 var getPlatforms2 = function getPlatforms2(_ref2) {
   var canvas = _ref2.canvas;
-  var platforms = [];
-  var platformsMap = ['lg', 'md'];
+  var platforms = [new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 903 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.width + 115,
+    y: canvas.height - 300,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].blockTri,
+    block: true
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 903 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.width + 115 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].blockTri.width,
+    y: canvas.height - 600,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].blockTri,
+    block: true
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 1878 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width + 175,
+    y: canvas.height - 300,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].block,
+    block: true
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 1878 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width + 155 + 200,
+    y: canvas.height - 360,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].block,
+    block: true
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 1878 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width + 155 + 200 + 200,
+    y: canvas.height - 330,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].block,
+    block: true
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 1878 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width + 155 + 200 + 200 + 200,
+    y: canvas.height - 240,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].block,
+    block: true
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 4734 - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.width / 2,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 5987,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 5987,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height * 2,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 6787,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 6787,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height * 2,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform
+  }), new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: 6787,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height * 3,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform
+  })];
+  var platformsMap = ['lg', 'md', 'gap', 'gap', 'gap', 'lg', 'gap', 'gap', 'gap', 'gap', 'gap', 'gap', 'lg', 'lg', 'gap', 'gap', 'md', 'gap', 'gap', 'md', 'gap', 'gap', 'lg'];
   var platformDistance = 0;
   platformsMap.forEach(function (symbol) {
     switch (symbol) {
-      case 'lg':
+      case 'md':
         platforms.push(new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
           x: platformDistance,
+          y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.height,
+          image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform,
+          block: true
+        }));
+        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mdPlatform.width - 3;
+        break;
+
+      case 'lg':
+        platforms.push(new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+          x: platformDistance - 2,
           y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height,
           image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform,
           block: true
         }));
-        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - 2;
+        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.width - 3;
         break;
 
       case 'gap':
@@ -11659,11 +11715,11 @@ var getPlatforms2 = function getPlatforms2(_ref2) {
       case 'xt':
         platforms.push(new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
           x: platformDistance,
-          y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform.height,
-          image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform,
+          y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].tPlatform.height,
+          image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].tPlatform,
           block: true
         }));
-        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform.width - 2;
+        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].tPlatform.width - 2;
         break;
     }
   });
@@ -11712,6 +11768,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_level2_background_png__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../img/level2/background.png */ "./src/img/level2/background.png");
 /* harmony import */ var _img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ../img/level2/mountains.png */ "./src/img/level2/mountains.png");
 /* harmony import */ var _img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../img/level2/lgPlatform.png */ "./src/img/level2/lgPlatform.png");
+/* harmony import */ var _img_level2_mdPlatform_png__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../img/level2/mdPlatform.png */ "./src/img/level2/mdPlatform.png");
+
 
 
 
@@ -11744,7 +11802,8 @@ __webpack_require__.r(__webpack_exports__);
   level2: {
     background: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_background_png__WEBPACK_IMPORTED_MODULE_25__["default"]),
     mountains: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_26__["default"]),
-    lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__["default"])
+    lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__["default"]),
+    mdPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mdPlatform_png__WEBPACK_IMPORTED_MODULE_28__["default"])
   },
   platform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_platform_png__WEBPACK_IMPORTED_MODULE_1__["default"]),
   hills: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_hills_png__WEBPACK_IMPORTED_MODULE_2__["default"]),

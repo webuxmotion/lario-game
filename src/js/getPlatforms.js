@@ -157,32 +157,137 @@ const getPlatforms1 = ({ canvas }) => {
 }
 
 const getPlatforms2 = ({ canvas }) => {
-  const platforms = [];
-  const platformsMap = ['lg', 'md']
+  const platforms = [
+    new GenericObject({
+      x: 903 + images.level2.mdPlatform.width + 115,
+      y: canvas.height - 300,
+      image: images.blockTri,
+      block: true
+    }),
+    new GenericObject({
+      x: 903 + images.level2.mdPlatform.width + 115 + images.blockTri.width,
+      y: canvas.height - 600,
+      image: images.blockTri,
+      block: true
+    }),
+    new GenericObject({
+      x: 1878 + images.level2.lgPlatform.width + 175,
+      y: canvas.height - 300,
+      image: images.block,
+      block: true
+    }),
+    new GenericObject({
+      x: 1878 + images.level2.lgPlatform.width + 155 + 200,
+      y: canvas.height - 360,
+      image: images.block,
+      block: true
+    }),
+    new GenericObject({
+      x: 1878 + images.level2.lgPlatform.width + 155 + 200 + 200,
+      y: canvas.height - 330,
+      image: images.block,
+      block: true
+    }),
+    new GenericObject({
+      x: 1878 + images.level2.lgPlatform.width + 155 + 200 + 200 + 200,
+      y: canvas.height - 240,
+      image: images.block,
+      block: true
+    }),
+    new GenericObject({
+      x: 4734 - images.level2.mdPlatform.width / 2,
+      y: canvas.height - images.level2.lgPlatform.height - images.level2.mdPlatform.height,
+      image: images.level2.mdPlatform
+    }),
+    new GenericObject({
+      x: 5987,
+      y: canvas.height - images.level2.lgPlatform.height - images.level2.mdPlatform.height,
+      image: images.level2.mdPlatform
+    }),
+    new GenericObject({
+      x: 5987,
+      y: canvas.height - images.level2.lgPlatform.height - images.level2.mdPlatform.height * 2,
+      image: images.level2.mdPlatform
+    }),
+    new GenericObject({
+      x: 6787,
+      y: canvas.height - images.level2.lgPlatform.height - images.level2.mdPlatform.height,
+      image: images.level2.mdPlatform
+    }),
+    new GenericObject({
+      x: 6787,
+      y: canvas.height - images.level2.lgPlatform.height - images.level2.mdPlatform.height * 2,
+      image: images.level2.mdPlatform
+    }),
+    new GenericObject({
+      x: 6787,
+      y: canvas.height - images.level2.lgPlatform.height - images.level2.mdPlatform.height * 3,
+      image: images.level2.mdPlatform
+    })
+  ];
+
+  const platformsMap = [
+    'lg',
+    'md',
+    'gap',
+    'gap',
+    'gap',
+    'lg',
+    'gap',
+    'gap',
+    'gap',
+    'gap',
+    'gap',
+    'gap',
+    'lg',
+    'lg',
+    'gap',
+    'gap',
+    'md',
+    'gap',
+    'gap',
+    'md',
+    'gap',
+    'gap',
+    'lg'
+  ];
 
   let platformDistance = 0;
 
   platformsMap.forEach((symbol) => {
     switch (symbol) {
-      case 'lg':
+      case 'md':
         platforms.push(
           new GenericObject({
             x: platformDistance,
+            y: canvas.height - images.level2.mdPlatform.height,
+            image: images.level2.mdPlatform,
+            block: true,
+          })
+        )
+
+        platformDistance += images.level2.mdPlatform.width - 3
+
+        break
+      case 'lg':
+        platforms.push(
+          new GenericObject({
+            x: platformDistance - 2,
             y: canvas.height - images.level2.lgPlatform.height,
             image: images.level2.lgPlatform,
             block: true,
           })
         )
-  
-        platformDistance += images.lgPlatform.width - 2
-  
+
+        platformDistance += images.level2.lgPlatform.width - 3
+
         break
-  
+
       case 'gap':
         platformDistance += 175
-  
+
         break
-  
+
       case 't':
         platforms.push(
           new GenericObject({
@@ -192,26 +297,26 @@ const getPlatforms2 = ({ canvas }) => {
             block: true
           })
         )
-  
+
         platformDistance += images.tPlatform.width - 2
-  
-        break;
-  
+
+        break
+
       case 'xt':
         platforms.push(
           new GenericObject({
             x: platformDistance,
-            y: canvas.height - images.xtPlatform.height,
-            image: images.xtPlatform,
+            y: canvas.height - images.tPlatform.height,
+            image: images.tPlatform,
             block: true,
           })
         )
-  
-        platformDistance += images.xtPlatform.width - 2
-  
-        break;
+
+        platformDistance += images.tPlatform.width - 2
+
+        break
     }
-  });
+  })
 
   return platforms;
 }

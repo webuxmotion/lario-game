@@ -13,7 +13,7 @@ import {
   isOnTopOfPlatform,
   objectsTouch,
 } from "./utils";
-import getFlowers from "./getFlowers";
+import { getFlowers1, getFlowers2 } from "./getFlowers";
 import { getPlatforms1, getPlatforms2 } from "./getPlatforms";
 import Particle from "./Particle";
 import { getGenericObjects1, getGenericObjects2 } from './getGenericObjects';
@@ -38,6 +38,8 @@ let game;
 let currentLevel = 1;
 
 function selectLevel(currentLevel) {
+  if (!audio.musicLevel1.playing()) audio.musicLevel1.play();
+  
   switch (currentLevel) {
     case 1:
       init();
@@ -64,7 +66,7 @@ function init() {
   }
   goombas = getGoombas1();
   particles = [];
-  flowers = getFlowers();
+  flowers = getFlowers1();
   genericObjects = getGenericObjects1();
 
   scrollOffset = 0;
@@ -93,17 +95,17 @@ function initLevel2() {
   }
   goombas = getGoombas2();
   particles = [];
-  flowers = getFlowers();
+  flowers = getFlowers2();
   genericObjects = getGenericObjects2();
 
   scrollOffset = 0;
   lastKey = "right";
   platforms = getPlatforms2({ canvas });
   flagPole = new GenericObject({
-    x: 7650,
-    y: canvas.height - images.lgPlatform.height - images.flagPole.height,
-    image: images.flagPole,
-  });
+    x: 7780,
+    y: canvas.height - images.level2.lgPlatform.height - images.flagPole.height,
+    image: images.flagPole
+  })
 }
 
 function animate() {
@@ -163,7 +165,7 @@ function animate() {
     }, 200);
 
     gsap.to(player.position, {
-      y: canvas.height - images.lgPlatform.height - player.height,
+      y: flagPole.position.y + flagPole.height - player.height,
       duration: 1,
       onComplete() {
         player.currentSprite = spriteRunRight;
@@ -207,10 +209,10 @@ function animate() {
 
     // switch to the next level
     setTimeout(() => {
-      gravity = 1.4
-      selectLevel(currentLevel + 1);
-      currentLevel += 1
-    }, 5000)
+      gravity = 1.4;
+      currentLevel++;
+      selectLevel(currentLevel);
+    }, 8000)
   }
 
   // mario obtains powerup
@@ -221,6 +223,7 @@ function animate() {
         object2: flower,
       })
     ) {
+      audio.obtainPowerUp.play();
       player.powerUps.fireFlower = true;
       setTimeout(() => {
         flowers.splice(index, 1);
@@ -238,9 +241,9 @@ function animate() {
 
     // remove goomba on fireball hit
     particles
-      .filter((particle) => particle.fireball)
       .forEach((particle, particleIndex) => {
         if (
+          particle.fireball &&
           particle.position.x + particle.radius >= goomba.position.x &&
           particle.position.x - particle.radius <=
             goomba.position.x + goomba.width &&
