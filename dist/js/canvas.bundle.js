@@ -9919,6 +9919,32 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/img/spriteFireFlowerShootLeft.png":
+/*!***********************************************!*\
+  !*** ./src/img/spriteFireFlowerShootLeft.png ***!
+  \***********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "968edc488cf0846c4e3ee0c70a603576.png");
+
+/***/ }),
+
+/***/ "./src/img/spriteFireFlowerShootRight.png":
+/*!************************************************!*\
+  !*** ./src/img/spriteFireFlowerShootRight.png ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "b800c0a402dc6ef4a09a8a2cabf21b0c.png");
+
+/***/ }),
+
 /***/ "./src/img/spriteFireFlowerStandLeft.png":
 /*!***********************************************!*\
   !*** ./src/img/spriteFireFlowerStandLeft.png ***!
@@ -10482,12 +10508,19 @@ var Player = /*#__PURE__*/function () {
           right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerJumpRight,
           left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerJumpLeft
         }
+      },
+      shoot: {
+        fireFlower: {
+          right: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerShootRight,
+          left: _images__WEBPACK_IMPORTED_MODULE_1__["default"].spriteFireFlowerShootLeft
+        }
       }
     };
     this.currentSprite = this.sprites.stand.right;
     this.currentCropWidth = this.frameWidth;
     this.invincible = false;
     this.opacity = 1;
+    this.shooting = false;
   }
 
   _createClass(Player, [{
@@ -10509,7 +10542,7 @@ var Player = /*#__PURE__*/function () {
         this.frames = 0;
       } else if (this.frames > 28 && (this.currentSprite === this.sprites.run.right || this.currentSprite === this.sprites.run.left || this.currentSprite === this.sprites.run.fireFlower.right || this.currentSprite === this.sprites.run.fireFlower.left)) {
         this.frames = 0;
-      } else if (this.currentSprite === this.sprites.jump.right || this.currentSprite === this.sprites.jump.left || this.currentSprite === this.sprites.jump.fireFlower.right || this.currentSprite === this.sprites.jump.fireFlower.left) {
+      } else if (this.currentSprite === this.sprites.jump.right || this.currentSprite === this.sprites.jump.left || this.currentSprite === this.sprites.jump.fireFlower.right || this.currentSprite === this.sprites.jump.fireFlower.left || this.currentSprite === this.sprites.shoot.fireFlower.right || this.currentSprite === this.sprites.shoot.fireFlower.left) {
         this.frames = 0;
       }
 
@@ -11088,10 +11121,20 @@ function animate() {
   if (player.position.y > canvas.height) {
     _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].die.play();
     selectLevel(currentLevel);
+  } // sprite switching
+
+
+  if (player.shooting) {
+    player.currentSprite = player.sprites.shoot.fireFlower.right;
+
+    if (lastKey === 'left') {
+      player.currentSprite = player.sprites.shoot.fireFlower.left;
+    }
+
+    return;
   }
 
-  if (player.velocity.y !== 0) return; // sprite switching
-
+  if (player.velocity.y !== 0) return;
   var spriteRunRight;
   var spriteRunLeft;
   var spriteStandRight;
@@ -11171,6 +11214,10 @@ addEventListener("keydown", function (_ref) {
 
     case "KeyF":
       if (!player.powerUps.fireFlower) return;
+      player.shooting = true;
+      setTimeout(function () {
+        player.shooting = false;
+      }, 100);
       _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].fireFlowerShot.play();
       var velocity = 15;
       if (lastKey === "left") velocity = -velocity;
@@ -11756,19 +11803,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_spriteFireFlowerStandLeft_png__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../img/spriteFireFlowerStandLeft.png */ "./src/img/spriteFireFlowerStandLeft.png");
 /* harmony import */ var _img_spriteFireFlowerJumpRight_png__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../img/spriteFireFlowerJumpRight.png */ "./src/img/spriteFireFlowerJumpRight.png");
 /* harmony import */ var _img_spriteFireFlowerJumpLeft_png__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../img/spriteFireFlowerJumpLeft.png */ "./src/img/spriteFireFlowerJumpLeft.png");
-/* harmony import */ var _img_blocks_png__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../img/blocks.png */ "./src/img/blocks.png");
-/* harmony import */ var _img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../img/spriteGoomba.png */ "./src/img/spriteGoomba.png");
-/* harmony import */ var _img_block_png__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../img/block.png */ "./src/img/block.png");
-/* harmony import */ var _img_blockTri_png__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../img/blockTri.png */ "./src/img/blockTri.png");
-/* harmony import */ var _img_spriteFireFlower_png__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../img/spriteFireFlower.png */ "./src/img/spriteFireFlower.png");
-/* harmony import */ var _img_lgPlatform_png__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../img/lgPlatform.png */ "./src/img/lgPlatform.png");
-/* harmony import */ var _img_tPlatform_png__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../img/tPlatform.png */ "./src/img/tPlatform.png");
-/* harmony import */ var _img_xtPlatform_png__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../img/xtPlatform.png */ "./src/img/xtPlatform.png");
-/* harmony import */ var _img_flagPole_png__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../img/flagPole.png */ "./src/img/flagPole.png");
-/* harmony import */ var _img_level2_background_png__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../img/level2/background.png */ "./src/img/level2/background.png");
-/* harmony import */ var _img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ../img/level2/mountains.png */ "./src/img/level2/mountains.png");
-/* harmony import */ var _img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../img/level2/lgPlatform.png */ "./src/img/level2/lgPlatform.png");
-/* harmony import */ var _img_level2_mdPlatform_png__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../img/level2/mdPlatform.png */ "./src/img/level2/mdPlatform.png");
+/* harmony import */ var _img_spriteFireFlowerShootLeft_png__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../img/spriteFireFlowerShootLeft.png */ "./src/img/spriteFireFlowerShootLeft.png");
+/* harmony import */ var _img_spriteFireFlowerShootRight_png__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../img/spriteFireFlowerShootRight.png */ "./src/img/spriteFireFlowerShootRight.png");
+/* harmony import */ var _img_blocks_png__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../img/blocks.png */ "./src/img/blocks.png");
+/* harmony import */ var _img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../img/spriteGoomba.png */ "./src/img/spriteGoomba.png");
+/* harmony import */ var _img_block_png__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../img/block.png */ "./src/img/block.png");
+/* harmony import */ var _img_blockTri_png__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../img/blockTri.png */ "./src/img/blockTri.png");
+/* harmony import */ var _img_spriteFireFlower_png__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../img/spriteFireFlower.png */ "./src/img/spriteFireFlower.png");
+/* harmony import */ var _img_lgPlatform_png__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../img/lgPlatform.png */ "./src/img/lgPlatform.png");
+/* harmony import */ var _img_tPlatform_png__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../img/tPlatform.png */ "./src/img/tPlatform.png");
+/* harmony import */ var _img_xtPlatform_png__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../img/xtPlatform.png */ "./src/img/xtPlatform.png");
+/* harmony import */ var _img_flagPole_png__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ../img/flagPole.png */ "./src/img/flagPole.png");
+/* harmony import */ var _img_level2_background_png__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../img/level2/background.png */ "./src/img/level2/background.png");
+/* harmony import */ var _img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! ../img/level2/mountains.png */ "./src/img/level2/mountains.png");
+/* harmony import */ var _img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ../img/level2/lgPlatform.png */ "./src/img/level2/lgPlatform.png");
+/* harmony import */ var _img_level2_mdPlatform_png__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ../img/level2/mdPlatform.png */ "./src/img/level2/mdPlatform.png");
+
+
 
 
 
@@ -11800,10 +11851,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   level2: {
-    background: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_background_png__WEBPACK_IMPORTED_MODULE_25__["default"]),
-    mountains: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_26__["default"]),
-    lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__["default"]),
-    mdPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mdPlatform_png__WEBPACK_IMPORTED_MODULE_28__["default"])
+    background: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_background_png__WEBPACK_IMPORTED_MODULE_27__["default"]),
+    mountains: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_28__["default"]),
+    lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_29__["default"]),
+    mdPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mdPlatform_png__WEBPACK_IMPORTED_MODULE_30__["default"])
   },
   platform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_platform_png__WEBPACK_IMPORTED_MODULE_1__["default"]),
   hills: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_hills_png__WEBPACK_IMPORTED_MODULE_2__["default"]),
@@ -11820,15 +11871,17 @@ __webpack_require__.r(__webpack_exports__);
   spriteFireFlowerStandRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerStandRight_png__WEBPACK_IMPORTED_MODULE_12__["default"]),
   spriteFireFlowerJumpLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerJumpLeft_png__WEBPACK_IMPORTED_MODULE_15__["default"]),
   spriteFireFlowerJumpRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerJumpRight_png__WEBPACK_IMPORTED_MODULE_14__["default"]),
-  blocks: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blocks_png__WEBPACK_IMPORTED_MODULE_16__["default"]),
-  goomba: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_17__["default"]),
-  block: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_block_png__WEBPACK_IMPORTED_MODULE_18__["default"]),
-  blockTri: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blockTri_png__WEBPACK_IMPORTED_MODULE_19__["default"]),
-  flower: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlower_png__WEBPACK_IMPORTED_MODULE_20__["default"]),
-  lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_lgPlatform_png__WEBPACK_IMPORTED_MODULE_21__["default"]),
-  tPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_tPlatform_png__WEBPACK_IMPORTED_MODULE_22__["default"]),
-  xtPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_xtPlatform_png__WEBPACK_IMPORTED_MODULE_23__["default"]),
-  flagPole: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_flagPole_png__WEBPACK_IMPORTED_MODULE_24__["default"])
+  spriteFireFlowerShootLeft: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerShootLeft_png__WEBPACK_IMPORTED_MODULE_16__["default"]),
+  spriteFireFlowerShootRight: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlowerShootRight_png__WEBPACK_IMPORTED_MODULE_17__["default"]),
+  blocks: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blocks_png__WEBPACK_IMPORTED_MODULE_18__["default"]),
+  goomba: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteGoomba_png__WEBPACK_IMPORTED_MODULE_19__["default"]),
+  block: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_block_png__WEBPACK_IMPORTED_MODULE_20__["default"]),
+  blockTri: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_blockTri_png__WEBPACK_IMPORTED_MODULE_21__["default"]),
+  flower: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_spriteFireFlower_png__WEBPACK_IMPORTED_MODULE_22__["default"]),
+  lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_lgPlatform_png__WEBPACK_IMPORTED_MODULE_23__["default"]),
+  tPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_tPlatform_png__WEBPACK_IMPORTED_MODULE_24__["default"]),
+  xtPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_xtPlatform_png__WEBPACK_IMPORTED_MODULE_25__["default"]),
+  flagPole: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_flagPole_png__WEBPACK_IMPORTED_MODULE_26__["default"])
 });
 
 /***/ }),

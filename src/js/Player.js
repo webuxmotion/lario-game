@@ -47,12 +47,19 @@ class Player {
           right: images.spriteFireFlowerJumpRight,
           left: images.spriteFireFlowerJumpLeft,
         }
+      },
+      shoot: {
+        fireFlower: {
+          right: images.spriteFireFlowerShootRight,
+          left: images.spriteFireFlowerShootLeft
+        }
       }
     }
     this.currentSprite = this.sprites.stand.right;
     this.currentCropWidth = this.frameWidth;
     this.invincible = false;
     this.opacity = 1;
+    this.shooting = false;
   }
 
   draw({ c }) {
@@ -94,7 +101,9 @@ class Player {
       this.currentSprite === this.sprites.jump.right ||
       this.currentSprite === this.sprites.jump.left ||
       this.currentSprite === this.sprites.jump.fireFlower.right ||
-      this.currentSprite === this.sprites.jump.fireFlower.left
+      this.currentSprite === this.sprites.jump.fireFlower.left ||
+      this.currentSprite === this.sprites.shoot.fireFlower.right ||
+      this.currentSprite === this.sprites.shoot.fireFlower.left
     ) {
       this.frames = 0;
     }

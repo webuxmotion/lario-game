@@ -16,6 +16,9 @@ import spriteFireFlowerStandLeft from '../img/spriteFireFlowerStandLeft.png'
 import spriteFireFlowerJumpRight from '../img/spriteFireFlowerJumpRight.png'
 import spriteFireFlowerJumpLeft from '../img/spriteFireFlowerJumpLeft.png'
 
+import spriteFireFlowerShootLeft from '../img/spriteFireFlowerShootLeft.png';
+import spriteFireFlowerShootRight from '../img/spriteFireFlowerShootRight.png';
+
 import blocks from '../img/blocks.png';
 import goomba from '../img/spriteGoomba.png';
 import block from '../img/block.png';
@@ -53,6 +56,8 @@ export default {
   spriteFireFlowerStandRight: createImage(spriteFireFlowerStandRight),
   spriteFireFlowerJumpLeft: createImage(spriteFireFlowerJumpLeft),
   spriteFireFlowerJumpRight: createImage(spriteFireFlowerJumpRight),
+  spriteFireFlowerShootLeft: createImage(spriteFireFlowerShootLeft),
+  spriteFireFlowerShootRight: createImage(spriteFireFlowerShootRight),
   blocks: createImage(blocks),
   goomba: createImage(goomba),
   block: createImage(block),

@@ -433,9 +433,20 @@ function animate() {
     selectLevel(currentLevel)
   }
 
+  // sprite switching
+
+  if (player.shooting) {
+    player.currentSprite = player.sprites.shoot.fireFlower.right;
+
+    if (lastKey === 'left') {
+      player.currentSprite = player.sprites.shoot.fireFlower.left;
+    }
+
+    return;
+  }
+
   if (player.velocity.y !== 0) return;
 
-  // sprite switching
   let spriteRunRight;
   let spriteRunLeft;
   let spriteStandRight;
@@ -528,6 +539,11 @@ addEventListener("keydown", ({ code }) => {
       break;
     case "KeyF":
       if (!player.powerUps.fireFlower) return;
+
+      player.shooting = true;
+      setTimeout(() => {
+        player.shooting = false;
+      }, 100);
 
       audio.fireFlowerShot.play();
       let velocity = 15;
