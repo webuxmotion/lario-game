@@ -1,7 +1,7 @@
 import GenericObject from "./GenericObject";
 import images from "./images";
 
-const getPlatforms = ({ canvas }) => {
+const getPlatforms1 = ({ canvas }) => {
   const platforms = [
     new GenericObject({
       x: 908 + 100,
@@ -156,4 +156,64 @@ const getPlatforms = ({ canvas }) => {
   return platforms;
 }
 
-export default getPlatforms;
+const getPlatforms2 = ({ canvas }) => {
+  const platforms = [];
+  const platformsMap = ['lg', 'md']
+
+  let platformDistance = 0;
+
+  platformsMap.forEach((symbol) => {
+    switch (symbol) {
+      case 'lg':
+        platforms.push(
+          new GenericObject({
+            x: platformDistance,
+            y: canvas.height - images.level2.lgPlatform.height,
+            image: images.level2.lgPlatform,
+            block: true,
+          })
+        )
+  
+        platformDistance += images.lgPlatform.width - 2
+  
+        break
+  
+      case 'gap':
+        platformDistance += 175
+  
+        break
+  
+      case 't':
+        platforms.push(
+          new GenericObject({
+            x: platformDistance,
+            y: canvas.height - images.tPlatform.height,
+            image: images.tPlatform,
+            block: true
+          })
+        )
+  
+        platformDistance += images.tPlatform.width - 2
+  
+        break;
+  
+      case 'xt':
+        platforms.push(
+          new GenericObject({
+            x: platformDistance,
+            y: canvas.height - images.xtPlatform.height,
+            image: images.xtPlatform,
+            block: true,
+          })
+        )
+  
+        platformDistance += images.xtPlatform.width - 2
+  
+        break;
+    }
+  });
+
+  return platforms;
+}
+
+export { getPlatforms1, getPlatforms2 };

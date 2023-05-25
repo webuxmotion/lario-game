@@ -26,7 +26,16 @@ import tPlatform from '../img/tPlatform.png';
 import xtPlatform from '../img/xtPlatform.png';
 import flagPole from '../img/flagPole.png';
 
+import backgroundLevel2 from '../img/level2/background.png'
+import mountains from '../img/level2/mountains.png'
+import lgPlatformLevel2 from '../img/level2/lgPlatform.png'
+
 export default {
+  level2: {
+    background: createImage(backgroundLevel2),
+    mountains: createImage(mountains),
+    lgPlatform: createImage(lgPlatformLevel2),
+  },
   platform: createImage(platformSrc),
   hills: createImage(hillsSrc),
   background: createImage(backgroundSrc),

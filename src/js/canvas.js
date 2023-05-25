@@ -1,6 +1,6 @@
 import gsap from 'gsap';
 import { audio } from './audio';
-import getGoombas from "./getGoombas";
+import { getGoombas1, getGoombas2 } from "./getGoombas";
 import GenericObject from "./GenericObject";
 import Player from "./Player";
 import images from "./images";
@@ -14,8 +14,9 @@ import {
   objectsTouch,
 } from "./utils";
 import getFlowers from "./getFlowers";
-import getPlatforms from "./getPlatforms";
+import { getPlatforms1, getPlatforms2 } from "./getPlatforms";
 import Particle from "./Particle";
+import { getGenericObjects1, getGenericObjects2 } from './getGenericObjects';
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -24,56 +25,80 @@ canvas.height = innerHeight;
 export let gravity = 1.4;
 const backgroundSpeed = 5;
 let lastKey;
-let player = new Player();
+let player;
 let platforms = [];
-let background;
-let background2;
-let hills;
-let genericObjects = [background, background2, hills];
+let genericObjects = [];
 let goombas = [];
 let flowers = [];
 let particles = [];
-let scrollOffset = 0;
-const keys = {
-  right: {
-    pressed: false,
-  },
-  left: {
-    pressed: false,
-  },
-};
+let scrollOffset;
+let keys;
 let flagPole;
 let game;
+let currentLevel = 1;
+
+function selectLevel(currentLevel) {
+  switch (currentLevel) {
+    case 1:
+      init();
+      break;
+    case 2:
+      initLevel2();
+      break;
+  }
+}
 
 function init() {
+  player = new Player();
+  scrollOffset = 0;
   game = {
     disableUserInput: false
   };
-  player = new Player();
-  goombas = getGoombas();
+  keys = {
+    right: {
+      pressed: false,
+    },
+    left: {
+      pressed: false,
+    },
+  }
+  goombas = getGoombas1();
   particles = [];
   flowers = getFlowers();
-  background = new GenericObject({
-    x: -1,
-    y: -1,
-    image: images.background,
-  });
-  background2 = new GenericObject({
-    x: -1,
-    y: images.background.height - 3,
-    image: images.background,
-  });
-  hills = new GenericObject({
-    x: -1,
-    y: canvas.height - images.hills.height + 10,
-    image: images.hills,
-  });
-  genericObjects = [background, background2, hills];
+  genericObjects = getGenericObjects1();
 
   scrollOffset = 0;
   lastKey = "right";
+  platforms = getPlatforms1({ canvas });
+  flagPole = new GenericObject({
+    x: 7650,
+    y: canvas.height - images.lgPlatform.height - images.flagPole.height,
+    image: images.flagPole,
+  });
+}
 
-  platforms = getPlatforms({ canvas });
+function initLevel2() {
+  player = new Player();
+  scrollOffset = 0;
+  game = {
+    disableUserInput: false
+  };
+  keys = {
+    right: {
+      pressed: false,
+    },
+    left: {
+      pressed: false,
+    },
+  }
+  goombas = getGoombas2();
+  particles = [];
+  flowers = getFlowers();
+  genericObjects = getGenericObjects2();
+
+  scrollOffset = 0;
+  lastKey = "right";
+  platforms = getPlatforms2({ canvas });
   flagPole = new GenericObject({
     x: 7650,
     y: canvas.height - images.lgPlatform.height - images.flagPole.height,
@@ -179,7 +204,16 @@ function animate() {
 
       increment++;
     }, 1000);
+
+    // switch to the next level
+    setTimeout(() => {
+      gravity = 1.4
+      selectLevel(currentLevel + 1);
+      currentLevel += 1
+    }, 5000)
   }
+
+  // mario obtains powerup
   flowers.forEach((flower, index) => {
     if (
       objectsTouch({
@@ -259,7 +293,7 @@ function animate() {
       // player die
       if (!player.invincible) {
         audio.die.play();
-        init();
+        selectLevel(currentLevel);
       }
     }
   });
@@ -393,7 +427,7 @@ function animate() {
 
   if (player.position.y > canvas.height) {
     audio.die.play();
-    init();
+    selectLevel(currentLevel)
   }
 
   if (player.velocity.y !== 0) return;
@@ -444,7 +478,7 @@ function animate() {
   }
 }
 window.onload = () => {
-  init();
+  selectLevel(currentLevel);
   animate();
 };
 

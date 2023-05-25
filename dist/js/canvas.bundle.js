@@ -9776,6 +9776,45 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./src/img/level2/background.png":
+/*!***************************************!*\
+  !*** ./src/img/level2/background.png ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "38f7e9ffc7b9e50090785b0836e49ba3.png");
+
+/***/ }),
+
+/***/ "./src/img/level2/lgPlatform.png":
+/*!***************************************!*\
+  !*** ./src/img/level2/lgPlatform.png ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "dc6f057d3bc6abca57f5ba86213edc7b.png");
+
+/***/ }),
+
+/***/ "./src/img/level2/mountains.png":
+/*!**************************************!*\
+  !*** ./src/img/level2/mountains.png ***!
+  \**************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = (__webpack_require__.p + "b83154a3dc63cdc45428534b969e9f25.png");
+
+/***/ }),
+
 /***/ "./src/img/lgPlatform.png":
 /*!********************************!*\
   !*** ./src/img/lgPlatform.png ***!
@@ -10613,6 +10652,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _getFlowers__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./getFlowers */ "./src/js/getFlowers.js");
 /* harmony import */ var _getPlatforms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getPlatforms */ "./src/js/getPlatforms.js");
 /* harmony import */ var _Particle__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Particle */ "./src/js/Particle.js");
+/* harmony import */ var _getGenericObjects__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./getGenericObjects */ "./src/js/getGenericObjects.js");
+
 
 
 
@@ -10630,54 +10671,81 @@ canvas.height = innerHeight;
 var gravity = 1.4;
 var backgroundSpeed = 5;
 var lastKey;
-var player = new _Player__WEBPACK_IMPORTED_MODULE_4__["default"]();
+var player;
 var platforms = [];
-var background;
-var background2;
-var hills;
-var genericObjects = [background, background2, hills];
+var genericObjects = [];
 var goombas = [];
 var flowers = [];
 var particles = [];
-var scrollOffset = 0;
-var keys = {
-  right: {
-    pressed: false
-  },
-  left: {
-    pressed: false
-  }
-};
+var scrollOffset;
+var keys;
 var flagPole;
 var game;
+var currentLevel = 1;
+
+function selectLevel(currentLevel) {
+  switch (currentLevel) {
+    case 1:
+      init();
+      break;
+
+    case 2:
+      initLevel2();
+      break;
+  }
+}
 
 function init() {
+  player = new _Player__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  scrollOffset = 0;
   game = {
     disableUserInput: false
   };
-  player = new _Player__WEBPACK_IMPORTED_MODULE_4__["default"]();
-  goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  keys = {
+    right: {
+      pressed: false
+    },
+    left: {
+      pressed: false
+    }
+  };
+  goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_2__["getGoombas1"])();
   particles = [];
   flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["default"])();
-  background = new _GenericObject__WEBPACK_IMPORTED_MODULE_3__["default"]({
-    x: -1,
-    y: -1,
-    image: _images__WEBPACK_IMPORTED_MODULE_5__["default"].background
-  });
-  background2 = new _GenericObject__WEBPACK_IMPORTED_MODULE_3__["default"]({
-    x: -1,
-    y: _images__WEBPACK_IMPORTED_MODULE_5__["default"].background.height - 3,
-    image: _images__WEBPACK_IMPORTED_MODULE_5__["default"].background
-  });
-  hills = new _GenericObject__WEBPACK_IMPORTED_MODULE_3__["default"]({
-    x: -1,
-    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].hills.height + 10,
-    image: _images__WEBPACK_IMPORTED_MODULE_5__["default"].hills
-  });
-  genericObjects = [background, background2, hills];
+  genericObjects = Object(_getGenericObjects__WEBPACK_IMPORTED_MODULE_10__["getGenericObjects1"])();
   scrollOffset = 0;
   lastKey = "right";
-  platforms = Object(_getPlatforms__WEBPACK_IMPORTED_MODULE_8__["default"])({
+  platforms = Object(_getPlatforms__WEBPACK_IMPORTED_MODULE_8__["getPlatforms1"])({
+    canvas: canvas
+  });
+  flagPole = new _GenericObject__WEBPACK_IMPORTED_MODULE_3__["default"]({
+    x: 7650,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].lgPlatform.height - _images__WEBPACK_IMPORTED_MODULE_5__["default"].flagPole.height,
+    image: _images__WEBPACK_IMPORTED_MODULE_5__["default"].flagPole
+  });
+}
+
+function initLevel2() {
+  player = new _Player__WEBPACK_IMPORTED_MODULE_4__["default"]();
+  scrollOffset = 0;
+  game = {
+    disableUserInput: false
+  };
+  keys = {
+    right: {
+      pressed: false
+    },
+    left: {
+      pressed: false
+    }
+  };
+  goombas = Object(_getGoombas__WEBPACK_IMPORTED_MODULE_2__["getGoombas2"])();
+  particles = [];
+  flowers = Object(_getFlowers__WEBPACK_IMPORTED_MODULE_7__["default"])();
+  genericObjects = Object(_getGenericObjects__WEBPACK_IMPORTED_MODULE_10__["getGenericObjects2"])();
+  scrollOffset = 0;
+  lastKey = "right";
+  platforms = Object(_getPlatforms__WEBPACK_IMPORTED_MODULE_8__["getPlatforms2"])({
     canvas: canvas
   });
   flagPole = new _GenericObject__WEBPACK_IMPORTED_MODULE_3__["default"]({
@@ -10779,8 +10847,15 @@ function animate() {
       _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].fireworkWhistle.play();
       if (increment === 3) clearInterval(intervalId);
       increment++;
-    }, 1000);
-  }
+    }, 1000); // switch to the next level
+
+    setTimeout(function () {
+      gravity = 1.4;
+      selectLevel(currentLevel + 1);
+      currentLevel += 1;
+    }, 5000);
+  } // mario obtains powerup
+
 
   flowers.forEach(function (flower, index) {
     if (Object(_utils__WEBPACK_IMPORTED_MODULE_6__["objectsTouch"])({
@@ -10852,7 +10927,7 @@ function animate() {
 
       if (!player.invincible) {
         _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].die.play();
-        init();
+        selectLevel(currentLevel);
       }
     }
   });
@@ -10998,7 +11073,7 @@ function animate() {
 
   if (player.position.y > canvas.height) {
     _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].die.play();
-    init();
+    selectLevel(currentLevel);
   }
 
   if (player.velocity.y !== 0) return; // sprite switching
@@ -11033,7 +11108,7 @@ function animate() {
 }
 
 window.onload = function () {
-  init();
+  selectLevel(currentLevel);
   animate();
 };
 
@@ -11158,22 +11233,84 @@ var getFlowers = function getFlowers() {
 
 /***/ }),
 
-/***/ "./src/js/getGoombas.js":
-/*!******************************!*\
-  !*** ./src/js/getGoombas.js ***!
-  \******************************/
-/*! exports provided: default */
+/***/ "./src/js/getGenericObjects.js":
+/*!*************************************!*\
+  !*** ./src/js/getGenericObjects.js ***!
+  \*************************************/
+/*! exports provided: getGenericObjects1, getGenericObjects2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGenericObjects1", function() { return getGenericObjects1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGenericObjects2", function() { return getGenericObjects2; });
+/* harmony import */ var _GenericObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GenericObject */ "./src/js/GenericObject.js");
+/* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
+
+
+
+var getGenericObjects1 = function getGenericObjects1() {
+  var background = new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: -1,
+    y: -1,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].background
+  });
+  var background2 = new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: -1,
+    y: _images__WEBPACK_IMPORTED_MODULE_1__["default"].background.height - 3,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].background
+  });
+  var hills = new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: -1,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].hills.height + 10,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].hills
+  });
+  var genericObjects = [background, background2, hills];
+  return genericObjects;
+};
+
+var getGenericObjects2 = function getGenericObjects2() {
+  var background = new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: -1,
+    y: -1,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.background
+  });
+  var background2 = new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: -1,
+    y: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.background.height - 3,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.background
+  });
+  var hills = new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    x: -1,
+    y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mountains.height + 10,
+    image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.mountains
+  });
+  var genericObjects = [background, background2, hills];
+  return genericObjects;
+};
+
+
+
+/***/ }),
+
+/***/ "./src/js/getGoombas.js":
+/*!******************************!*\
+  !*** ./src/js/getGoombas.js ***!
+  \******************************/
+/*! exports provided: getGoombas1, getGoombas2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGoombas1", function() { return getGoombas1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGoombas2", function() { return getGoombas2; });
 /* harmony import */ var _Goomba__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Goomba */ "./src/js/Goomba.js");
 /* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
 
 
 var goombaWidth = 43.33;
 
-var getGoombas = function getGoombas() {
+var getGoombas1 = function getGoombas1() {
   return [new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
     position: {
       x: 908 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth,
@@ -11268,7 +11405,102 @@ var getGoombas = function getGoombas() {
   })];
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (getGoombas);
+var getGoombas2 = function getGoombas2() {
+  return [new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 908 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth,
+      y: 100
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 400,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth,
+      y: 100
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 400,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth - goombaWidth,
+      y: 100
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 400,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth - goombaWidth - goombaWidth,
+      y: 100
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 400,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 3249 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - goombaWidth - goombaWidth - goombaWidth - goombaWidth,
+      y: 100
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 400,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 5135 + _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform.width / 2 + goombaWidth,
+      y: 100
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 100,
+      traveled: 0
+    }
+  }), new _Goomba__WEBPACK_IMPORTED_MODULE_0__["default"]({
+    position: {
+      x: 6968,
+      y: 0
+    },
+    velocity: {
+      x: -0.3,
+      y: 0
+    },
+    distance: {
+      limit: 100,
+      traveled: 0
+    }
+  })];
+};
+
+
 
 /***/ }),
 
@@ -11276,17 +11508,19 @@ var getGoombas = function getGoombas() {
 /*!********************************!*\
   !*** ./src/js/getPlatforms.js ***!
   \********************************/
-/*! exports provided: default */
+/*! exports provided: getPlatforms1, getPlatforms2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPlatforms1", function() { return getPlatforms1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPlatforms2", function() { return getPlatforms2; });
 /* harmony import */ var _GenericObject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GenericObject */ "./src/js/GenericObject.js");
 /* harmony import */ var _images__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./images */ "./src/js/images.js");
 
 
 
-var getPlatforms = function getPlatforms(_ref) {
+var getPlatforms1 = function getPlatforms1(_ref) {
   var canvas = _ref.canvas;
   var platforms = [new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
     x: 908 + 100,
@@ -11391,7 +11625,52 @@ var getPlatforms = function getPlatforms(_ref) {
   return platforms;
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (getPlatforms);
+var getPlatforms2 = function getPlatforms2(_ref2) {
+  var canvas = _ref2.canvas;
+  var platforms = [];
+  var platformsMap = ['lg', 'md'];
+  var platformDistance = 0;
+  platformsMap.forEach(function (symbol) {
+    switch (symbol) {
+      case 'lg':
+        platforms.push(new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+          x: platformDistance,
+          y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform.height,
+          image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].level2.lgPlatform,
+          block: true
+        }));
+        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].lgPlatform.width - 2;
+        break;
+
+      case 'gap':
+        platformDistance += 175;
+        break;
+
+      case 't':
+        platforms.push(new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+          x: platformDistance,
+          y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].tPlatform.height,
+          image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].tPlatform,
+          block: true
+        }));
+        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].tPlatform.width - 2;
+        break;
+
+      case 'xt':
+        platforms.push(new _GenericObject__WEBPACK_IMPORTED_MODULE_0__["default"]({
+          x: platformDistance,
+          y: canvas.height - _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform.height,
+          image: _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform,
+          block: true
+        }));
+        platformDistance += _images__WEBPACK_IMPORTED_MODULE_1__["default"].xtPlatform.width - 2;
+        break;
+    }
+  });
+  return platforms;
+};
+
+
 
 /***/ }),
 
@@ -11430,6 +11709,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _img_tPlatform_png__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../img/tPlatform.png */ "./src/img/tPlatform.png");
 /* harmony import */ var _img_xtPlatform_png__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../img/xtPlatform.png */ "./src/img/xtPlatform.png");
 /* harmony import */ var _img_flagPole_png__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../img/flagPole.png */ "./src/img/flagPole.png");
+/* harmony import */ var _img_level2_background_png__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../img/level2/background.png */ "./src/img/level2/background.png");
+/* harmony import */ var _img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ../img/level2/mountains.png */ "./src/img/level2/mountains.png");
+/* harmony import */ var _img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../img/level2/lgPlatform.png */ "./src/img/level2/lgPlatform.png");
+
+
+
 
 
 
@@ -11456,6 +11741,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  level2: {
+    background: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_background_png__WEBPACK_IMPORTED_MODULE_25__["default"]),
+    mountains: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_mountains_png__WEBPACK_IMPORTED_MODULE_26__["default"]),
+    lgPlatform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_level2_lgPlatform_png__WEBPACK_IMPORTED_MODULE_27__["default"])
+  },
   platform: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_platform_png__WEBPACK_IMPORTED_MODULE_1__["default"]),
   hills: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_hills_png__WEBPACK_IMPORTED_MODULE_2__["default"]),
   background: Object(_utils__WEBPACK_IMPORTED_MODULE_0__["createImage"])(_img_background_png__WEBPACK_IMPORTED_MODULE_3__["default"]),
