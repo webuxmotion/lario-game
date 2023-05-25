@@ -10728,6 +10728,20 @@ var keys;
 var flagPole;
 var game;
 var currentLevel = 1;
+var restartButton = document.querySelector('.js-restart-button');
+var winBlock = document.querySelector('.js-win');
+restartButton.addEventListener('click', function () {
+  hideWinMessage(winBlock);
+  init();
+});
+
+function hideWinMessage(el) {
+  el.classList.remove('is-show');
+}
+
+function showWinMessage(el) {
+  el.classList.add('is-show');
+}
 
 function selectLevel(currentLevel) {
   if (!_audio__WEBPACK_IMPORTED_MODULE_1__["audio"].musicLevel1.playing()) _audio__WEBPACK_IMPORTED_MODULE_1__["audio"].musicLevel1.play();
@@ -10740,6 +10754,9 @@ function selectLevel(currentLevel) {
     case 2:
       initLevel2();
       break;
+
+    default:
+      showWinMessage(winBlock);
   }
 }
 
@@ -10927,6 +10944,13 @@ function animate() {
     });
     platform.velocity.x = 0;
   });
+
+  if (player.powerUps.fireFlower) {
+    c.font = "20px Arial";
+    c.fillStyle = 'white';
+    c.fillText('Press F to fire', 50, 50);
+  }
+
   goombas.forEach(function (goomba, index) {
     goomba.update({
       c: c

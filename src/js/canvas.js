@@ -37,6 +37,19 @@ let flagPole;
 let game;
 let currentLevel = 1;
 
+const restartButton = document.querySelector('.js-restart-button');
+const winBlock = document.querySelector('.js-win');
+restartButton.addEventListener('click', () => {
+  hideWinMessage(winBlock);
+  init();
+});
+function hideWinMessage(el) {
+  el.classList.remove('is-show');
+}
+function showWinMessage(el) {
+  el.classList.add('is-show');
+}
+
 function selectLevel(currentLevel) {
   if (!audio.musicLevel1.playing()) audio.musicLevel1.play();
   
@@ -47,6 +60,8 @@ function selectLevel(currentLevel) {
     case 2:
       initLevel2();
       break;
+    default:
+      showWinMessage(winBlock);
   }
 }
 
@@ -236,6 +251,12 @@ function animate() {
     platform.update({ c });
     platform.velocity.x = 0;
   });
+
+  if (player.powerUps.fireFlower) {
+    c.font = "20px Arial";
+    c.fillStyle = 'white';
+    c.fillText('Press F to fire', 50, 50);
+  }
   goombas.forEach((goomba, index) => {
     goomba.update({ c });
 
