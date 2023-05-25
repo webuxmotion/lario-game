@@ -6,6 +6,7 @@ class Particle {
     velocity,
     radius,
     fireball,
+    fades,
     color = "#654428",
   }) {
     this.position = {
@@ -20,9 +21,13 @@ class Particle {
     this.ttl = 300;
     this.color = color;
     this.fireball = fireball;
+    this.opacity = 1;
+    this.fades = fades;
   }
 
   draw({ c }) {
+    c.save();
+    c.globalAlpha = this.opacity;
     c.beginPath();
     c.arc(
       this.position.x,
@@ -35,9 +40,11 @@ class Particle {
     c.fillStyle = this.color;
     c.fill();
     c.closePath();
+    c.restore();
   }
 
   update({ c }) {
+    this.ttl--;
     this.draw({ c });
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
@@ -47,7 +54,10 @@ class Particle {
       this.velocity.y += gravity * 0.1;
     }
 
-    this.ttl--;
+    if (this.fades && this.opacity > 0) {
+      this.opacity -= 0.01;
+    }
+    if (this.opacity < 0) this.opacity = 0;
   }
 
   isAboveTheBottom() {

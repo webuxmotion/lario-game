@@ -1,3 +1,5 @@
+import gsap from 'gsap';
+import { audio } from './audio';
 import getGoombas from "./getGoombas";
 import GenericObject from "./GenericObject";
 import Player from "./Player";
@@ -19,7 +21,7 @@ const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-export const gravity = 1.4;
+export let gravity = 1.4;
 const backgroundSpeed = 5;
 let lastKey;
 let player = new Player();
@@ -32,7 +34,6 @@ let goombas = [];
 let flowers = [];
 let particles = [];
 let scrollOffset = 0;
-
 const keys = {
   right: {
     pressed: false,
@@ -41,8 +42,13 @@ const keys = {
     pressed: false,
   },
 };
+let flagPole;
+let game;
 
 function init() {
+  game = {
+    disableUserInput: false
+  };
   player = new Player();
   goombas = getGoombas();
   particles = [];
@@ -68,6 +74,11 @@ function init() {
   lastKey = "right";
 
   platforms = getPlatforms({ canvas });
+  flagPole = new GenericObject({
+    x: 7650,
+    y: canvas.height - images.lgPlatform.height - images.flagPole.height,
+    image: images.flagPole,
+  });
 }
 
 function animate() {
@@ -77,6 +88,98 @@ function animate() {
     object.update({ c });
     object.velocity.x = 0;
   });
+  particles.forEach((particle, index) => {
+    particle.update({ c });
+
+    if (
+      particle.fireball && (
+        particle.position.x + particle.radius >= canvas.width ||
+        particle.position.x - particle.radius <= 0
+      )
+    ) {
+      setTimeout(() => {
+        particles.splice(index, 1);
+      }, 0);
+    }
+  });
+  flagPole.update({ c });
+  flagPole.velocity.x = 0;
+
+  // mario touches flagpole
+  // win condition
+  // complete level
+  if (
+    !game.disableUserInput && 
+    objectsTouch({
+      object1: player,
+      object2: flagPole
+    })
+  ) {
+    let spriteStandRight;
+    let spriteRunRight;
+    if (player.powerUps.fireFlower) {
+      spriteStandRight = player.sprites.stand.fireFlower.right;
+      spriteRunRight = player.sprites.run.fireFlower.right;
+    } else {
+      spriteStandRight = player.sprites.stand.right;
+      spriteRunRight = player.sprites.run.right;
+    }
+    audio.completeLevel.play()
+    audio.musicLevel1.stop()
+    game.disableUserInput = true;
+    player.velocity.x = 0;
+    player.velocity.y = 0;
+    player.currentSprite = spriteStandRight;
+    gravity = 0;
+
+    // flagpole slide
+    setTimeout(() => {
+      audio.descend.play()
+    }, 200);
+
+    gsap.to(player.position, {
+      y: canvas.height - images.lgPlatform.height - player.height,
+      duration: 1,
+      onComplete() {
+        player.currentSprite = spriteRunRight;
+      }
+    });
+    gsap.to(player.position, {
+      x: canvas.width,
+      delay: 1,
+      duration: 2,
+      ease: 'power1.in'
+    });
+
+    const particleCount = 300;
+    const radians = Math.PI * 2 / particleCount;
+    const power = 8;
+    let increment = 1;
+
+    const intervalId = setInterval(() => {
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle({
+          position: {
+            x: canvas.width / 4 * increment,
+            y: canvas.height / 3,
+          },
+          velocity: {
+            x: Math.cos(radians * i) * power * Math.random(),
+            y: Math.sin(radians * i) * power * Math.random()
+          },
+          radius: 3 * Math.random(),
+          color: `hsl(${Math.random() * 200}, 50%, 50%)`,
+          fades: true
+        }))
+      }
+      audio.fireworkBurst.play();
+      audio.fireworkWhistle.play();
+
+      if (increment === 3) clearInterval(intervalId);
+
+      increment++;
+    }, 1000);
+  }
   flowers.forEach((flower, index) => {
     if (
       objectsTouch({
@@ -111,27 +214,29 @@ function animate() {
           particle.position.y - particle.radius <=
             goomba.position.y + goomba.height
         ) {
+          audio.fireworkBurst.play();
           generateExplosion({
             particles,
             object: goomba,
           });
 
           setTimeout(() => {
-            goombas.splice(index, 1);
             particles.splice(particleIndex, 1);
+            goombas.splice(index, 1);
           }, 0);
         }
       });
 
+    // goomba squash
     if (collisitionTop({ object1: player, object2: goomba })) {
+      audio.goombaSquash.play();
+      generateExplosion({
+        particles,
+        object: goomba,
+      });
       player.velocity.y = -20;
 
       setTimeout(() => {
-        generateExplosion({
-          particles,
-          object: goomba,
-        });
-
         goombas.splice(index, 1);
       }, 0);
     } else if (
@@ -141,38 +246,30 @@ function animate() {
       player.position.y <= goomba.position.y + goomba.height
     ) {
       // player hits goomba
+      // lose fireflower / lose powerup
       if (player.powerUps.fireFlower) {
         player.invincible = true;
         player.powerUps.fireFlower = false;
+        audio.losePowerUp.play();
 
         setTimeout(() => {
           player.invincible = false;
         }, 1000);
       }
+      // player die
       if (!player.invincible) {
+        audio.die.play();
         init();
       }
-    }
-  });
-  particles.forEach((particle, index) => {
-    particle.update({ c });
-
-    if (
-      particle.fireball && (
-        particle.position.x + particle.radius >= canvas.width ||
-        particle.position.x - particle.radius <= 0
-      )
-    ) {
-      setTimeout(() => {
-        particles.splice(index, 1);
-      }, 0);
     }
   });
   
   player.update({ c });
 
-  let hitSide = false;
+  if (game.disableUserInput) return;
 
+  // scrolling code starts
+  let hitSide = false;
   if (
     keys.right.pressed &&
     player.position.x + player.width < canvas.width / 2
@@ -186,7 +283,6 @@ function animate() {
   } else {
     player.velocity.x = 0;
 
-    // scrolling code
     if (keys.right.pressed) {
       for (let i = 0; i < platforms.length; i++) {
         const platform = platforms[i];
@@ -203,6 +299,8 @@ function animate() {
 
       if (!hitSide) {
         scrollOffset += player.speed;
+
+        flagPole.velocity.x -= player.speed;
 
         genericObjects.forEach((object) => {
           object.velocity.x = -backgroundSpeed;
@@ -233,6 +331,8 @@ function animate() {
 
       if (!hitSide) {
         scrollOffset -= player.speed;
+
+        flagPole.velocity.x += player.speed;
 
         genericObjects.forEach((object) => {
           object.velocity.x = backgroundSpeed;
@@ -291,14 +391,8 @@ function animate() {
     });
   });
 
-  
-  // win condition
-  if (images.platform && scrollOffset + 100 + player.width > 6968 + 300) {
-    console.log('you win')
-  }
-
   if (player.position.y > canvas.height) {
-    console.log("You lose");
+    audio.die.play();
     init();
   }
 
@@ -355,6 +449,8 @@ window.onload = () => {
 };
 
 addEventListener("keydown", ({ code }) => {
+  if (game.disableUserInput) return;
+
   switch (code) {
     case "ArrowLeft":
     case "KeyA":
@@ -370,30 +466,33 @@ addEventListener("keydown", ({ code }) => {
     case "Space":
     case "KeyW":
       if (player.velocity.y === 0) {
+        audio.jump.play();
+
         player.velocity.y = -player.jumpVelocity;
-      }
 
-      let spriteJumpRight;
-      let spriteJumpLeft;
+        let spriteJumpRight;
+        let spriteJumpLeft;
 
-      if (player.powerUps.fireFlower) {
-        spriteJumpRight = player.sprites.jump.fireFlower.right;
-        spriteJumpLeft = player.sprites.jump.fireFlower.left;
-      } else {
-        spriteJumpRight = player.sprites.jump.right;
-        spriteJumpLeft = player.sprites.jump.left;
-      }
+        if (player.powerUps.fireFlower) {
+          spriteJumpRight = player.sprites.jump.fireFlower.right;
+          spriteJumpLeft = player.sprites.jump.fireFlower.left;
+        } else {
+          spriteJumpRight = player.sprites.jump.right;
+          spriteJumpLeft = player.sprites.jump.left;
+        }
 
-      if (lastKey === "right") {
-        player.currentSprite = spriteJumpRight;
-      } else {
-        player.currentSprite = spriteJumpLeft;
+        if (lastKey === "right") {
+          player.currentSprite = spriteJumpRight;
+        } else {
+          player.currentSprite = spriteJumpLeft;
+        }
       }
 
       break;
     case "KeyF":
       if (!player.powerUps.fireFlower) return;
 
+      audio.fireFlowerShot.play();
       let velocity = 15;
 
       if (lastKey === "left") velocity = -velocity;
@@ -418,6 +517,8 @@ addEventListener("keydown", ({ code }) => {
 });
 
 addEventListener("keyup", ({ code }) => {
+  if (game.disableUserInput) return;
+
   switch (code) {
     case "ArrowLeft":
     case "KeyA":

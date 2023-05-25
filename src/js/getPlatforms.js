@@ -11,7 +11,7 @@ const getPlatforms = ({ canvas }) => {
     }),
     new GenericObject({
       x: 908 + 100 + images.block.width,
-      y: 100,
+      y: canvas.height - images.platform.height - 500,
       image: images.block,
       block: true
     }),
@@ -36,7 +36,6 @@ const getPlatforms = ({ canvas }) => {
       y: canvas.height - images.xtPlatform.height,
       image: images.block,
       block: true,
-      text: 5712 + images.xtPlatform.width + 175
     }),
     new GenericObject({
       x: 6116 + 175,
@@ -67,14 +66,18 @@ const getPlatforms = ({ canvas }) => {
       y: canvas.height - images.xtPlatform.height - 200,
       image: images.blockTri,
       block: true,
-      text: 6116 + 175 * 4 + images.blockTri.width
     }),
     new GenericObject({
       x: 6968 + 300,
       y: canvas.height - images.lgPlatform.height,
       image: images.lgPlatform,
       block: true,
-      text: 6968 + 300
+    }),
+    new GenericObject({
+      x: 6968 + 300 + images.lgPlatform.width - 2,
+      y: canvas.height - images.lgPlatform.height,
+      image: images.lgPlatform,
+      block: true,
     })
   ]
 
@@ -94,7 +97,7 @@ const getPlatforms = ({ canvas }) => {
     'xt',
     'gap',
     'gap',
-    'xt'
+    'xt',
   ];
 
   let platformDistance = 0;
@@ -108,7 +111,6 @@ const getPlatforms = ({ canvas }) => {
             y: canvas.height - images.lgPlatform.height,
             image: images.lgPlatform,
             block: true,
-            text: platformDistance
           })
         )
   
@@ -133,7 +135,7 @@ const getPlatforms = ({ canvas }) => {
   
         platformDistance += images.tPlatform.width - 2
   
-        break
+        break;
   
       case 'xt':
         platforms.push(
@@ -142,13 +144,12 @@ const getPlatforms = ({ canvas }) => {
             y: canvas.height - images.xtPlatform.height,
             image: images.xtPlatform,
             block: true,
-            text: platformDistance
           })
         )
   
         platformDistance += images.xtPlatform.width - 2
   
-        break
+        break;
     }
   });
 
