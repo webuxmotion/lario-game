@@ -41,7 +41,8 @@ const restartButton = document.querySelector('.js-restart-button');
 const winBlock = document.querySelector('.js-win');
 restartButton.addEventListener('click', () => {
   hideWinMessage(winBlock);
-  init();
+  currentLevel = 1;
+  selectLevel(currentLevel);
 });
 function hideWinMessage(el) {
   el.classList.remove('is-show');
