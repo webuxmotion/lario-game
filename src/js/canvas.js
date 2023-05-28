@@ -17,6 +17,7 @@ import { getFlowers1, getFlowers2 } from "./getFlowers";
 import { getPlatforms1, getPlatforms2 } from "./getPlatforms";
 import Particle from "./Particle";
 import { getGenericObjects1, getGenericObjects2 } from './getGenericObjects';
+import Fps from './Fps';
 
 const canvas = document.getElementById("canvas");
 const c = canvas.getContext("2d");
@@ -36,6 +37,7 @@ let keys;
 let flagPole;
 let game;
 let currentLevel = 1;
+let fps = new Fps({ canvasWidth: canvas.width });
 
 const restartButton = document.querySelector('.js-restart-button');
 const winBlock = document.querySelector('.js-win');
@@ -324,6 +326,8 @@ function animate() {
   });
   
   player.update({ c });
+
+  fps.update({ c });
 
   if (game.disableUserInput) return;
 

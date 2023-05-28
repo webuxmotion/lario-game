@@ -10174,6 +10174,114 @@ var Flower = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./src/js/Fps.js":
+/*!***********************!*\
+  !*** ./src/js/Fps.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Fps = /*#__PURE__*/function () {
+  function Fps(_ref) {
+    var canvasWidth = _ref.canvasWidth;
+
+    _classCallCheck(this, Fps);
+
+    this.times = [];
+    this.fps = 0;
+    this.lastUpdate = 0;
+    this.lastUpdateCounter = 0;
+    this.items = [];
+    this.lineWidth = 5;
+    this.maxItems = 30;
+    this.height = 50;
+    this.width = this.maxItems * this.lineWidth;
+    this.position = {
+      x: canvasWidth - this.width - 20,
+      y: 20
+    };
+  }
+
+  _createClass(Fps, [{
+    key: "draw",
+    value: function draw(_ref2) {
+      var c = _ref2.c;
+      c.save();
+      c.globalAlpha = 0.2;
+      c.fillStyle = "black";
+      c.fillRect(this.position.x, this.position.y, this.width, this.height);
+
+      for (var i = 0; i < this.maxItems; i++) {
+        var item = this.items[i];
+
+        if (item) {
+          var height = item * this.height / 70;
+          var x = this.position.x + i * this.lineWidth;
+          var y = this.position.y + this.height - height;
+          c.fillStyle = "green";
+
+          if (item < 30) {
+            c.fillStyle = "red";
+          }
+
+          c.globalAlpha = 0.2;
+          c.fillRect(x, y, this.lineWidth, height);
+          c.globalAlpha = 1;
+          c.fillRect(x, y, this.lineWidth, 2);
+        }
+      }
+
+      c.font = "20px Arial";
+      c.fillText("FPS: ".concat(this.fps), this.position.x, this.position.y);
+      c.restore();
+    }
+  }, {
+    key: "update",
+    value: function update(_ref3) {
+      var c = _ref3.c;
+      this.draw({
+        c: c
+      });
+      var now = performance.now();
+
+      while (this.times.length > 0 && this.times[0] <= now - 1000) {
+        this.times.shift();
+      }
+
+      var delta = (now - this.times[this.times.length - 1]) / 1000 || 0;
+
+      if (!this.lastUpdate || this.lastUpdateCounter - this.lastUpdate >= 0.5) {
+        this.lastUpdate = now;
+        this.lastUpdateCounter = now;
+        this.fps = this.times.length;
+
+        if (this.items.length > this.maxItems) {
+          this.items.shift();
+        }
+
+        this.items.push(this.fps);
+      }
+
+      this.lastUpdateCounter += delta;
+      this.times.push(now);
+    }
+  }]);
+
+  return Fps;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Fps);
+
+/***/ }),
+
 /***/ "./src/js/GenericObject.js":
 /*!*********************************!*\
   !*** ./src/js/GenericObject.js ***!
@@ -10699,6 +10807,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _getPlatforms__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./getPlatforms */ "./src/js/getPlatforms.js");
 /* harmony import */ var _Particle__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Particle */ "./src/js/Particle.js");
 /* harmony import */ var _getGenericObjects__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./getGenericObjects */ "./src/js/getGenericObjects.js");
+/* harmony import */ var _Fps__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./Fps */ "./src/js/Fps.js");
+
 
 
 
@@ -10728,6 +10838,9 @@ var keys;
 var flagPole;
 var game;
 var currentLevel = 1;
+var fps = new _Fps__WEBPACK_IMPORTED_MODULE_11__["default"]({
+  canvasWidth: canvas.width
+});
 var restartButton = document.querySelector('.js-restart-button');
 var winBlock = document.querySelector('.js-win');
 restartButton.addEventListener('click', function () {
@@ -11004,6 +11117,9 @@ function animate() {
     }
   });
   player.update({
+    c: c
+  });
+  fps.update({
     c: c
   });
   if (game.disableUserInput) return; // scrolling code starts
